@@ -1,0 +1,113 @@
+---
+title: "Customize Block Shape of Chunk Code in R Markdown"
+author: "M Adi Setiawan"
+date: "2023-09-05"
+output: html_document
+---
+
+
+## GET STARTED WITH CUSTOM BLOCKS CODE WITH CSS STYLE
+
+```{r standar chunk shape format, include=TRUE}
+
+print ('this is a standar output of chunk block')
+
+```
+
+if you want to formatting chunk block, you should use css.style, below steps how to use css.style :
+
+1. first you need, decleare custom CSS rules : 
+
+``` {css chunk style, echo=FALSE}
+.watch-out {
+  background-color: #24293E;
+  border: 1px solid #9336B4 ;
+  color : white;
+}
+```
+
+2. Then we assign a class `watch-out` to the code chunk via the chunk option `class.source`.
+
+```{r class.source = "watch-out", class.output="watch-out" , include=TRUE}
+
+print ('this is a format chunk block')
+
+```
+
+3. If you want all code blocks in the document to use the custom style, you can set class.source in the global knitr options, e.g.,
+
+```{r, echo=TRUE, include=TRUE, results='hide'}
+knitr::opts_chunk$set(class.source = "watch-out") # applying all custom style on input/source of chunk code
+knitr::opts_chunk$set(class.output = "watch-out") # applying all custom style on output of chunk code
+```
+
+```{r, include = TRUE}
+print ('result of applying css style to input & output block of chunk code')
+```
+
+
+
+### B. LIST PROPERTIES FOR CUSTOMIZING CODE BLOCKS WITH CSS STYLE
+
+here's list you can use : 
+
+* background-color: using for filling background color
+* border: using for format border line : such as : line width, line color
+* color : adjusting color text
+* text-align : (left, center, right)
+* font-family: 'Monaco', monospace; (example)
+* font-size: adjusting font size (combined with px)
+* line-height: adjusting for text (combined with %)
+* padding : adjusting border height (combined with ex)
+* border-radius: formating border shape (combined px)
+
+ ```
+ will explain later :
+  * letter-spacing: normal
+  * word-break: break-all
+  ```
+
+``` {css chunk style-2, echo=FALSE}
+.variety {
+  background-color: #071952;
+  border: 2px solid #8BE8E5 ;
+  color : white;
+  text-align : center ;
+  font-family: 'Monaco', monospace;
+  font-size: 12px ;
+  letter-spacing: normal;
+  word-break: break-all;
+  letter-spacing: -0.05em;
+  word-break: normal;
+  border-radius: 15px;
+  line-height: 100%;
+  padding: 1ex;
+}
+
+```
+
+```{r class.source = "variety", class.output="variety" , include=TRUE}
+
+print ('this code block using variety format')
+
+```
+
+
+
+
+
+
+we will use basic css style below :
+``` {css chunck style-3, echo=FALSE}
+.variety {
+  background-color: #57375D;
+  border: 1px solid #9400FF ;
+  color : white;
+}
+```
+
+```{r basic,class.source = "variety", class.output="variety" ,include=TRUE}
+
+print ('this is a basic code block')
+
+```
