@@ -1,0 +1,263 @@
+---
+title: "Animated Map Plot with ggplot & ggmap"
+author: "M Adi Setiawan"
+date: "2023-09-07"
+output:
+  cleanrmd::html_document_clean:
+    theme: water-dark
+    mathjax: default
+    use_fontawesome: true
+---
+
+```{r install cleanrmd (to use water-dark theme),include=FALSE,results='hide',message=FALSE}
+remotes::install_github("gadenbuie/cleanrmd", force = TRUE)
+cleanrmd::use_cleanrmd(name = "water-dark")
+```
+
+``` {css chunk style, echo=FALSE}
+.neon-bar {
+  background-color: #24293E;
+  border: 1px solid #9336B4 ;
+  color : white;
+}
+```
+
+```{r embedding neon bar theme for all chunk in this code, include=FALSE,results='hide',message=FALSE}
+knitr::opts_chunk$set(class.source = "neon-bar")
+knitr::opts_chunk$set(class.output = "neon-bar")
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
+```
+
+## Animated Map Plot with ggpanimate
+
+This article is a continuation of the [cyclistic_case_study](https://htmlpreview.github.io/?https://github.com/adisetiawannn/data_analytics/blob/main/case_study/cyclistic_case_study.html) article, this time we will create an animated graph of the number of trips of casual cyclists at an end station using a combination of ggplot and gganimate.
+
+gganimate is an extension of the ggplot2 package for creating animated ggplots. It provides a range of new functionality that can be added to the plot object in order to customize how it should change with time.
+
+> * Key features of gganimate:
+  * transitions : you want your data to change
+  * views : you want your viewpoint to change
+  * shadows : you want the animation to have memory
+
+> * Goal : animated plot of end station total trip by casual cyclists
+  * Data used : cyclistic trip [link](https://divvy-tripdata.s3.amazonaws.com/index.html)
+  * Data licence : [license](https://ride.divvybikes.com/data-license-agreement)
+
+#### List of Packages & Libraries that used for this article
+
+```{r packages & library, include=TRUE,results='hide',message=FALSE}
+# pakcage 
+
+devtools::install_github('thomasp85/gganimate') # install gganimate package
+
+# data manipulation & processing library
+library (dplyr)
+library (janitor)
+library (lubridate)
+library (DBI)
+library (RMySQL)
+library (tidyr)
+
+# static visualize library
+library (ggplot2)
+library (ggdark)
+library (ggmap)
+library(scales)
+
+# animatied vizualize library
+library(gifski)
+library (gganimate)
+
+```
+
+### A. LOAD DATA
+
+data we will use is stored at database, below how to load it :
+
+```{r load data, include=TRUE,results='hide',message=FALSE}
+
+# create connection to database
+mysqlconn <- dbConnect(MySQL(), 
+                       user = 'root', password = 'rootpass',
+                       dbname = 'DB_TELKOM', host = 'localhost')
+# load data in 2 batch
+raw_data_2022 <- dbGetQuery(mysqlconn,"select ride_id, end_station_name,
+                            end_lat, end_lng, ended_at, member_casual
+                            from cyclistic_2022")
+
+raw_data_2023 <- dbGetQuery(mysqlconn,"select ride_id, end_station_name,
+                            end_lat, end_lng, ended_at, member_casual
+                            from cyclistic_2023")
+
+# disabled database connection
+dbDisconnect(mysqlconn)
+
+# bind data
+raw_data <- bind_rows(raw_data_2022, raw_data_2023)
+
+# Remove data & database connection
+remove(raw_data_2023)
+remove(raw_data_2022)
+remove(mysqlconn)
+
+```
+
+### B. CLEANING, MANIPULATION & PROCESSING RAW_DATA
+
+Following how to get properly data through some process :
+
+```{r format data, include=TRUE, results='hide', message=FALSE}
+
+# 1. Cleaning column name
+
+raw_data <- clean_names(raw_data)
+
+# 2. Removing empty/NA values 
+
+raw_data <- remove_empty(raw_data, which = c("rows", "cols"), cutoff = 1)
+
+# 3.Removing NA Values
+
+raw_data$end_station_name <- replace (raw_data$end_station_name, raw_data$end_station_name == "", NA)
+
+raw_data <- raw_data %>% filter(!is.na(end_station_name)) 
+
+# 4. Data Type Manipulation : Date handling
+
+raw_data$ended_at <- ymd_hms (raw_data$ended_at) # convert date as date time (posixct type)
+
+# 5. Create additional column ( as month_trip column)
+
+raw_data <- raw_data %>% mutate(month_trip = as.Date (as.POSIXct(ended_at,format = "%Y-%m-%d")))
+
+# 6. Sort data
+
+raw_data <- arrange(raw_data, ended_at)
+
+```
+
+### C. GET ANALYSED DATA
+The raw data we have cannot be analyzed yet, because we only need a few of certain columns such end_at, end_station_name, end_lat, end_lng, month_trip, member_casual, ride_id.
+
+the data in the end_lng and end_lat columns have duplicates, so that it can reduce or even disrupt the information that we will visualize. here's how to prepare data that is ready to be analyzed in this case:
+
+```{r get analysed data, warning=FALSE, include=TRUE, results='hide', message=FALSE}
+
+# data_for_plot
+
+# only plot for casual cyclist so we filtering out member
+
+map_data <- raw_data %>% 
+  select (ended_at,end_station_name, end_lat, end_lng, month_trip, member_casual,ride_id) %>% 
+  filter (member_casual == 'casual') %>% 
+  group_by(month_trip) %>%
+  mutate(numtrips = length(ride_id)) %>%
+  distinct(end_station_name, .keep_all = TRUE)
+
+# create additional column for cummulative sum of num_trips
+
+map_data_v2 <- map_data %>% select (month_trip, end_station_name, numtrips) %>% 
+  group_by (end_station_name, month_trip) %>% 
+  arrange(month_trip) %>% 
+  summarize (sum_trip = sum(numtrips)) %>% 
+  mutate (cumsum_trip = cumsum(sum_trip) ) %>% 
+  arrange(end_station_name,month_trip)
+
+# get Latitude and Longitude for each end_station_name
+
+# data frame for join (right_side) removing duplicate name of end_station
+
+right_data <- map_data[,c("end_station_name","end_lat","end_lng")] %>%
+  filter(!duplicated(end_station_name))
+
+# for further needed, adding id_col
+
+# map_data_v2$id_join <- paste(map_data_v2$end_station_name, map_data_v2$month_trip, sep = "/")
+
+map_data_join <- left_join(x = map_data_v2, y = unique(right_data [,c("end_station_name","end_lat","end_lng")]),by = join_by(end_station_name == end_station_name )) %>% arrange(month_trip)
+
+```
+
+### D. GETTING STARTED WITH STATIC MAP PLOT
+
+we have obtained data that is ready to be visualized (map_data_join), to do a map plot, we need to prepare a layer in the form of a map tile that we can get through the following this websites: 
+
+1. Get Format Map Image / Map Tiles
+  
+web : openstreetmap [link](https://www.openstreetmap.org/). this web used for completing our longitude, latitude code & zoom level, keep in mind, we should manualy adjust for getting ideal zoom on this web.
+  
+Here are the steps to use the website to get map tiles:  
+
+To get map tiles, first open the openstreetmap website, then follow the steps in the following image:
+  
+  <center>
+  
+  ![](/Users/960169/Library/CloudStorage/OneDrive-PT.TelekomunikasiIndonesia/DATA SCIENCE/DATA ANALYTIC - GCC X TELKOM/CASE_STUDY/picture/4. openmapstreet-1.png){width="1080px"}
+ 
+   
+  ![](/Users/960169/Library/CloudStorage/OneDrive-PT.TelekomunikasiIndonesia/DATA SCIENCE/DATA ANALYTIC - GCC X TELKOM/CASE_STUDY/picture/5. openmapstreet-2.png){width="1080px"}
+  
+  </center>
+
+following how to create map tiles with ggmap library and get_stamenmap function :
+  
+```{r map tiles, warning=FALSE, include=TRUE, results='hide',message=FALSE}
+
+library (ggplot2)
+library (ggdark)
+library(scales)
+library (ggmap)
+library (gganimate)
+
+# visualization
+
+# get basic_map
+basic_map <- get_stamenmap ( 
+  bbox = c(left = -87.9510, bottom = 41.8243, right = -87.5768, top = 42.0184 ),
+  maptype = 'toner',
+  zoom = 12)
+
+```
+
+After getting the map tiles, plot the data, below is a static map plot :
+
+```{r gganimate_v2, warning =FALSE, include=TRUE, message=FALSE}
+
+# plot data on map tiles
+
+ride_map_v2 <- ggmap (basic_map) +
+  geom_point(data = map_data_join, mapping = aes(x = end_lng ,
+                                            y = end_lat ,
+                                            color = cumsum_trip), alpha = 0.5) +
+  scale_color_viridis_c(option = "viridis", 
+                        breaks = seq(0,3000000,500000))  + 
+  dark_theme_gray() +
+  labs (color = "acc trips", xlab = NULL, ylab =  NULL)
+
+# view map
+
+ride_map_v2
+
+```
+
+for completing this case, we just need to animated static map plot. following how to animated it :
+
+```{r animated map plot, warning =FALSE, include=TRUE, message=FALSE}
+# animated map plot
+
+library(gifski)
+
+map_with_animation <- ride_map_v2 + shadow_mark () +
+  transition_time (map_data_join$month_trip) + ggtitle('year : {frame_time}')
+
+# customize animated plot with gifski library
+
+animate(map_with_animation, duration = 30 ,fps = 5  ,renderer = gifski_renderer(), height = 720, width =720)
+                        
+# if needed, save as gif extension
+anim_save("output_v2.gif", map_with_animation)
+
+```
+
+In a brief view, the animation map plot above reinforces our [hypothesis](https://htmlpreview.github.io/?https://github.com/adisetiawannn/data_analytics/blob/main/case_study/cyclistic_case_study.html) that casual cyclists are mainly composed of tourists and or families who wish to spend their trips and or weekends sightseeing as well as carrying out leisure activities.
+
