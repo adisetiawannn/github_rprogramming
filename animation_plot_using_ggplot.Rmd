@@ -58,13 +58,13 @@ library (DBI)
 library (RMySQL)
 library (tidyr)
 
-# static visualize library
+# static visualization library
 library (ggplot2)
 library (ggdark)
 library (ggmap)
 library(scales)
 
-# animatied vizualize library
+# animatied visualization library
 library(gifski)
 library (gganimate)
 
@@ -182,7 +182,7 @@ map_data_join <- left_join(x = map_data_v2, y = unique(right_data [,c("end_stati
 
 we have obtained data that is ready to be visualized (map_data_join), to do a map plot, we need to prepare a layer in the form of a map tile that we can get through the following this websites: 
 
-1. Get Format Map Image / Map Tiles
+1.Get Format Map Image / Map Tiles
   
 web : openstreetmap [link](https://www.openstreetmap.org/). this web used for completing our longitude, latitude code & zoom level, keep in mind, we should manualy adjust for getting ideal zoom on this web.
   
@@ -232,7 +232,9 @@ ride_map_v2 <- ggmap (basic_map) +
   scale_color_viridis_c(option = "viridis", 
                         breaks = seq(0,3000000,500000))  + 
   dark_theme_gray() +
-  labs (color = "acc trips", xlab = NULL, ylab =  NULL)
+  theme(axis.title = element_blank(),
+        axis.ticks = element_blank()) +
+  labs (color = "acc trips")
 
 # view map
 
