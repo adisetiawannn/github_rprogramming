@@ -5,6 +5,10 @@ date: "2023-09-15"
 output: html_document
 ---
 
+> disclaimer : this article adopt from advanced r by Hadley Wickham
+
+
+
 # 1. DATA STRCUTURE
 
 There are 3 common data type that be used in data analys framework :
@@ -313,18 +317,194 @@ While factors look (and often behave) like character vectors, they are actually 
 
 ## 1.3 Matrices and Array
 
+* Common function that used to be on matrix and array 
+
 |                         |  matrix                 | array             |
 |:------------------------|:-----------------------:|:-----------------:|
-|Matrix                   |two dimensions           |Multidimensional   |
+|structure                |two dimensions           |Multidimensional   |
 |Assignment form          |matrix(),dim()           |array(),dim()      |
 |length (ndata)           |length()                 |length()           |
 |nrow                     |nrow(),ncol()            |dim()              |
 |assigning row & col name |rownames(),colnames()    |dimnames()         |
+|binding data             |rbind(),cbind()          |abind()            |
+|check matrix or array    |is.matrix()              |is.array()         |
+|assign as                |as.matrix()              |as.array()         |
+|matrix transpose         |t()                      |t()                |
+
+
+
+```{r matrix and array, include=FALSE}
+
+# create matrix and array
+matrix_a <-  matrix(data = seq (1,6,1), nrow = 2, ncol = 3)
+array_a <-  array(1:6, dim = c(2,3,2)  ) # dim = c (row,col,list no)
+
+# or we can use dim to convert existing object to matrix and array
+a <- 1:6
+# creating matrix with dim()
+dim(a) <- c(2,3)
+a
+
+# creating array with dim ()
+dim(a) <- c(2,3,1)
+a
+
+# view matrix and array structure
+dim(matrix_a) # or
+dim (array_a)
+
+# view length of whole data (ndata)
+length (matrix_a)
+length (array_a)
+
+# view length of row data or col (nrow or ncol)
+
+# on matrix and array
+nrow(matrix_a)
+ncol (array_a)
+
+
+# assign names of row and col (for indexing row and col) of matrix and array
+# for matrix, use rownames() and colnames()
+rownames(matrix_a) <- c("a","b")
+colnames(matrix_a) <- c("c","d", "e")
+matrix_a
+
+# for array, use dimnames()
+
+dimnames(array_a) <- list(c("a","b"), c("c",'d','e'), c('A','B'))
+array_a
+
+array_a["A"]
+
+```
+
+
+```{r binding then check then assign as, include=FALSE}
+add_b <- seq (7,12,1)
+dim (add_b) <- c(2,3)
+
+rbind(matrix_a, add_b)
+
+# check is it matrix ?
+is.matrix(array_a)
+
+# check is it array ?
+is.array(matrix_a)
+
+# assign as matrix
+
+as.matrix(add_b)
+is.matrix(add_b)
+
+
+# transpose matrix
+
+t(add_b)
+
+```
+
+> Vectors are not the only 1-dimensional data structure. You can have matrices with a single row or single column, or arrays with a single. see the differences with str () function.
+
+
+## 1.4 data Frame
+
+data frame is a list of equal-length vectors. This makes it a 2-dimensional structure, so it shares properties of both the matrix and the list.
+
+|                         |  Dataframe              | 
+|:------------------------|:-----------------------:|
+|structure                |two dimensions           |
+|Assignment form          |data.frame()             |
+|length (ndata)           |length()                 |
+|nrow                     |nrow(),ncol()            |
+|assigning row & col name |rownames(),colnames()    |
+|binding data             |rbind(),cbind()          |
+|check matrix or array    |is.data.frame()          |
+|assign as                |as.data.frame()          |
+|transpose                |t()                      |
 
 
 
 
+```{r dataframe, include=FALSE}
 
+# create a dataframe
+x <- data.frame(x = seq(1,3,1), y = c('a','b','c'))
+str(x)
+
+```
+
+
+### 1.4.1 Testing & Coercion
+
+* Because a data.frame is an S3 class, its type reflects the underlying vector used to build it : the list. 
+
+* To check if an object is a data frame, use class() or test explicitly with is.data.frame()
+
+* to coerce a data frame use as.data.frame ()
+  
+  * A vector will create a one-column data frame.
+  
+  * A list will create one column for each element; it’s an error if they’re
+not all the same length.
+  
+  * A matrix will create a data frame with the same number of columns
+and rows.
+
+
+```{r test & coercion data.frame, include=FALSE}
+# TESTING
+
+typeof(x)
+#> "list"
+
+class (x)
+#> "data.frame"
+
+is.data.frame(x)
+#> TRUE
+
+
+## COERCE : you can coerce an object to data frame with : as.data.frame ()
+
+y <- c("x" = c(1,2,3),
+       "y" = c('a','b','c'))
+class(y)
+
+#> "character"
+
+y1 <- as.data.frame(y)
+class(y1)
+#> "data.frame"
+
+```
+
+
+### 1.4.2 Combining Data Frames
+
+* we can combine a data frame using cbind() and row cbind() :
+
+```{r cbind, include=FALSE}
+cbind(x, z=c(3:1))
+
+rbind(x, z = c(3:2))
+
+
+```
+
+Key take away of bind row and column of dataframe :
+
+* When combining column-wise, the number of rows must match, but row names are ignored.
+
+* When combining row-wise, both the number and names of columns must match
+
+* Use "plyr::rbind.fill()" to combine data frames that don’t have the same columns.
+
+* avoid bind a factor data type.
+
+> The conversion rules for cbind() are complicated and best avoided by ensuring all inputs are of the same type.
+
+### 1.4.3 Special Columns
 
 
 
