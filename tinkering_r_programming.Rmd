@@ -1,0 +1,335 @@
+---
+title: "ADVANCED R"
+author: "M Adi Setiawan"
+date: "2023-09-15"
+output: html_document
+---
+
+# 1. DATA STRCUTURE
+
+There are 3 common data type that be used in data analys framework :
+
+1. Homogenous Data : Atomic Vector, Matrix & n Array
+
+2. Heterogenous Data : List, Data Frame
+
+## 1.1 Vector
+
+Three common properties in vector : 
+  * typeof() : what it is
+  
+  * length() : how many elements it contains
+  
+  * attributes() : additional arbitrary metadata
+  
+  > all elements of an atomic vector must be the same type, whereas the elements of a list can have different types.
+  
+  > NB: is.vector() does not test if an object is a vector. Instead it returns TRUE only if the object is a vector with no attributes apart from names. Use is.atomic(x) || is.list(x) to test if an object is actually a vector.
+  
+  
+### 1.1.1 ATOMIC VECTOR
+
+Atomic vectors are usually created with c(), short for combine:
+
+```{r atomic vector, include=FALSE}
+dbl_var <- c(1, 2.5, 4.5)
+
+# With the L suffix, you get an integer rather than a double 
+int_var <- c(1L, 6L, 10L)
+
+# Use TRUE and FALSE (or T and F) to create logical vectors 
+log_var <- c(TRUE, FALSE, T, F)
+
+chr_var <- c("these are", "some strings")
+
+# Atomic vectors are always flat, even if you nest c()’s:
+c(1, c(2, c(3, 4)))
+
+# [1]1234
+```
+
+
+NA will always be coerced to the correct type if used inside c(), or you can create NAs of a specific type with : 
+
+  * NA_real_ (a double vector) 
+  * NA_integer_ 
+  * NA_character_
+  
+(you can check through combining it with typeof() function)
+
+### 1.1.1.1 Types and tests
+
+Given a vector, you can determine its type with typeof(), or check if it’s a specific type with an “is” function: is.character(), is.double(), is.integer(), is.logical(), or, more generally, is.atomic().
+
+> is.numeric() is a general test for the “numberliness” of a vector and returns TRUE for both integer and double vectors. It is not a specific test for double vectors, which are often called numeric.
+
+```{r type test, include=FALSE}
+
+typeof(int_var)
+is.integer(int_var)
+is.atomic(int_var)
+
+typeof(dbl_var)
+is.double(dbl_var)
+is.atomic(dbl_var)
+
+is.numeric(int_var)
+is.numeric(dbl_var)
+
+# NB : Numeric contain 2 type : integer : whole number (ex : 1,10) and double : possibly store decimal (ex : 1.11 , 2.00)
+
+```
+
+### 1.1.1.2 Coercion
+
+All elements of an atomic vector must be the same type, so when you attempt to combine different types they will be coerced to the most flexible type.
+
+```{r coercion vector, include=FALSE}
+
+str(c("a", 1))
+#>  chr [1:2] "a" "1" : stored as char
+
+```
+
+When a logical vector is coerced to an integer or double, TRUE becomes 1 and FALSE becomes 0. This is very useful in conjunction with sum() and mean().
+
+```{r, include=FALSE}
+x <- c(FALSE, FALSE, TRUE)
+as.numeric(x)
+str(as.numeric(x))
+
+# so we can apply some basic math operating :
+
+# Total number of TRUEs
+sum(x) 
+#>[1]1
+
+# Proportion that are TRUE
+mean(x)
+#> [1] 0.3333
+
+```
+
+Coercion often happens automatically. Most mathematical functions (+, log, abs, etc.) will coerce to a double or integer, and most logical operations (&, |, any, etc) will coerce to a logical. You will usually get a warning message if the coercion might lose information. If confusion is likely, explicitly coerce with as.character(), as.double(), as.integer(), or as.logical().
+
+### 1.1.2 List
+
+Lists are different from atomic vectors because their elements can be of any type, including lists. You construct lists by using list() instead of c():
+
+```{r list, include=FALSE}
+x1 <- list(1:3, "a", c(TRUE, FALSE, TRUE), c(2.3, 5.9))
+
+str(x1)
+
+```
+
+Lists are sometimes called recursive vectors, because a list can con- tain other lists. This makes them fundamentally different from atomic vectors.
+
+```{r recursive vector, include=FALSE}
+
+x2 <- list(list(list(list()))) 
+
+str(x2)
+
+#>Listof1
+#> $ :List of 1
+#>   ..$ :List of 1
+#>   .. ..$ : list()
+
+is.recursive(x2)
+#> [1] TRUE
+```
+
+c() will combine several lists into one. If given a combination of atomic vectors and lists, c() will coerce the vectors to list before combining them. Compare the results of list() and c():
+
+```{r combination of atomic vector and list, include=FALSE}
+
+x3 <- list(list(1, 2), c(3, 4)) 
+str(x3)
+
+y <- c(list(1, 2), c(3, 4)) 
+str(y)
+
+```
+
+The typeof() a list is list. You can test for a list with is.list() and coerce to a list with as.list(). You can turn a list into an atomic vector with unlist(). If the elements of a list have different types, unlist() uses the same coercion rules as c().
+
+## 1.2 Atrributes
+
+* All objects can have arbitrary additional attributes, used to store meta data about the object.
+
+* Attributes can be thought of as a named list (with unique names)
+
+* Attributes can be accessed : 
+  
+  *individually with : attr()
+
+  * all at once (as a list) with : attributes().
+
+```{r attr and attributes, include=FALSE}
+y2 <- 1:10
+
+attr(y2, "my_attribute") <- "This is a vector" 
+
+attr(y2, "my_attribute")
+#> [1] "This is a vector"
+
+str(attributes(y2))
+#>Listof1
+#> $ my_attribute: chr "This is a vector"
+
+```
+
+The only attributes not lost are the three most important:
+
+  * Names, a character vector giving each element a name
+  
+  * Dimensions, used to turn vectors into matrices and arrays
+  
+  * Class,used to implement the S3objectsystem
+
+Each of these attributes has a specific accessor function to get and set values. When working with these attributes, use names(x), class(x), and dim(x), not attr(x, "names"), attr(x, "class"), and attr(x, "dim").
+
+
+### 1.2.1 Names
+
+* You can name a vector in three ways: (function : names () and setnames () )
+
+  1.  When creating it: x<-c(a=1,b=2,c=3).
+
+  2. By modifying an existing vector in place: x <- 1:3; names(x) <- c("a", "b", "c").
+  3. By creating a modified copy of a vector: x <- setNames(1:3, c("a", "b", "c")).
+
+Not all elements of a vector need to have a name. If some names are missing, names() will return an empty string for those elements. If all names are missing, names() will return NULL.
+
+```{r names, include=FALSE}
+
+y3 <- c(a=1,2,3)
+names(y3)
+
+# or this setNames(y3, c('a'))
+
+#> [1] "a" "" ""
+
+z<-c(1,2,3)
+names(z)
+#> NULL
+
+```
+
+### 1.2.2 Factors
+
+* One important use of attributes is to define factors. 
+
+* A factor is a vector that can contain only predefined values, and is used to store categorical data. 
+
+* Factors are built on top of integer vectors using two attributes :
+  
+  1. the class(), “factor”, which makes them behave differently from regular integer vectors.
+  
+  2. the levels(), which defines the set of allowed values.
+
+> common function used on factor : factor (), class (), levels()
+
+```{r factor, include=FALSE}
+
+x1 <- factor(c("a", "b", "b", "a"))
+x1
+#>[1]abba
+#> Levels: a b
+class (x1)
+#> [1] "factor"
+levels(x1)
+#> [1] "a" "b"
+
+# You can't use values that are not in the levels
+x1[2] <- "c"
+#> Warning: invalid factor level, NA generated
+x1
+#>[1]a <NA>b a
+#> Levels: a b
+
+```
+
+Factors are useful when you know the possible values a variable may take, even if you don’t see all values in a given dataset. Using a factor instead of a character vector makes it obvious when some groups contain no observations:
+
+```{r factor case, include=FALSE}
+sex_char <- c("m", "m", "m")
+sex_factor <- factor(sex_char, levels = c("m", "f"))
+table(sex_char) 
+#> sex_char
+#>m
+#>3 table(sex_factor) 
+#> sex_factor 
+#>m f
+#>3 0
+```
+
+* Sometimes when a data frame is read directly from a file, a column you’d thought would produce a numeric vector instead produces a factor. 
+
+* This is caused by a non-numeric value in the column, often a missing value encoded in a special way like . or -. 
+
+* To remedy the situation :
+
+  1. coerce the vector from a factor to a character vector
+  
+  2. and then from a character to a double vector. 
+  
+* Be sure to check for missing values after this process.
+  
+* of course, a much better plan is to discover what caused the problem in the first place and fix that ; using the na.strings argument to read.csv() is often a good place to start.
+
+```{r fixing factor while read data from csv, include=FALSE}
+
+z1 <- read.csv(text = "value\n12\n1\n.\n9")
+
+typeof(z1$value)
+#> [1] "integer"
+
+as.double(z1$value)
+#>[1]3214
+# Oops, that's not right: 3 2 1 4 are the levels of a factor, # not the values we read in!
+
+class(z1$value)
+#> [1] "factor"
+
+#Wecanfixitnow:
+as.double(as.character(z1$value))
+
+#> Warning: NAs introduced by coercion
+#>[1]12 1NA 9
+
+# Or change how we read it in:
+z1 <- read.csv(text = "value\n12\n1\n.\n9", na.strings=".") 
+typeof(z1$value)
+#> [1] "integer"
+
+class(z1$value)
+#> [1] "integer" z$value
+#>[1]12 1NA 9 # Perfect! :)
+```
+
+While factors look (and often behave) like character vectors, they are actually integers. Be careful when treating them like strings. Some string methods (like gsub() and grepl()) will coerce factors to strings, while others (like nchar()) will throw an error, and still others (like c()) will use the underlying integer values. For this reason, it’s usually best to explicitly convert factors to character vectors if you need string-like behaviour. In early versions of R, there was a memory advantage to using factors instead of character vectors, but this is no longer the case.
+
+## 1.3 Matrices and Array
+
+|                         |  matrix                 | array             |
+|:------------------------|:-----------------------:|:-----------------:|
+|Matrix                   |two dimensions           |Multidimensional   |
+|Assignment form          |matrix(),dim()           |array(),dim()      |
+|length (ndata)           |length()                 |length()           |
+|nrow                     |nrow(),ncol()            |dim()              |
+|assigning row & col name |rownames(),colnames()    |dimnames()         |
+
+
+
+
+
+
+
+
+
+
+
+
+
