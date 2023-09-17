@@ -559,20 +559,22 @@ df2[2,'y']
 
 * There are five things that you can use to subset a vector :
   
-  1. positive integers
+  1. positive integers : return elements at the specified positions
   
-  2. negative integers
+  2. negative integers : omit elements at the specified positions (You can’t mix positive and negative integers in a single subset)
   
-  3. Logical 
+  3. Logical: select elements where the corresponding logical value is TRUE
   
-  4. NULL ([])
+  4. NULL ([]) : returns the original vector
   
-  5. Letter
+  5. Zero : Zero returns a zero-length vector. usually used in test data.
+  
+  6. Character : return elements with matching names
 
 ```{r subsetting atomic vector, include=FALSE}
 x1 <- seq (1,10,1)
 
-# 1. positive integers 
+# 1. positive integers : return element in spesific positions
 x1 [4:8]
 #> [1] 4 5 6 7 8
 
@@ -587,7 +589,78 @@ x1[c(2, 2)]
 x1[c(2.1, 2.9)]
 #> [1] 2 2
 
-# 2. negative integers
+# 2. negative integers : omit/remove element in spesific positions
+
+x1 [-1]
+#> [1]  2  3  4  5  6  7  8  9 10
+
+
+x1 [c(-2,-10)]
+#> [1]  1  3  4  5  6  7  8  9 
+
+# You can’t mix positive and negative integers in a single subset
+
+# x1[c(-1, 2)]
+#> Error in x1[c(-1, 2)] : only 0's may be mixed with negative subscripts
+
+# 3. Logical Vector : return element on TRUE logical positions
+
+x1 [c(T,F,T,F)] # TRUE stand for odd number (angka ganjil)
+#> [1] 1 3 5 7 9
+
+# If the logical vector is shorter than the vector being subsetted, it will be recycled to be the same length.
+
+# above equivalent as below :
+x1 [c(T,F)]
+#> [1] 1 3 5 7 9
+
+#> [1] 1 3 5 7 9
+x1 [x1>3]
+#> [1]  4  5  6  7  8  9 10
+
+x1 [x1%%2 == 0] # return whole number (angka genap)
+#> [1]  2  4  6  8 10
+
+# A missing value in the index always yields a missing value in the output:
+x1 [c(T,F,NA,T)]
+#> [1]  1 NA  4  5 NA  8  9
+
+# 4. Nothing : return the orignal vector
+
+x1 []
+#> 1  2  3  4  5  6  7  8  9 10
+
+# 5. Zero : Zero returns a zero-length vector
+x1[0]
+#> numeric(0)
+
+x2 <- c('a','b','c')
+x2 [0]
+#> character(0)
+
+# 6. Character Vector : return elements with matching names
+
+y<- setNames(object = x1, letters[1:10])
+
+y[c('a','j','d')]
+#>  a  j  d 
+#>  1 10  4 
+
+# Like integer indices, you can repeat indices
+y[c('e','e','e')]
+#>  e  e  e 
+#>  5  5  5  
+
+# When subsetting with [ names are always matched exactly. if any match it will return NA
+
+z <- c('abc' = 1, 'def'=2)
+z [c('a','d')]
+#> <NA> <NA> 
+#>  NA   NA
+
+z[c('abc','def')]
+#> abc def 
+#> 1   2 
 
 
 
