@@ -666,10 +666,63 @@ z[c('abc','def')]
 
 ```
 
+### 2.2 Subsetting List
+
+* Subsetting a list works in the same way as subsetting an atomic vector.
+
+
+### 2.3 Matrices and Arrays
+
+* You can subset higher-dimensional structures in three ways :
+  
+  1. With multiple vectors.
+  
+  2. With a single vector.
+  
+  3. With a matrix.
+
+* subsetting in list in general :  supply a 1d index for each dimension, separated by a comma
+
+* Blank subsetting is now useful, because it lets you keep all rows or all columns
+
+* on subsetting arrays, we can do with matrix : 2d matrix for 2d array or matrix, 3d matrix for 3d array and so on. Each row in the matrix specifies the location of one valu
+
+```{r subsetting matrix and array, include=FALSE}
+
+# subsetting matrix
+
+a <- matrix (data=1:9, nrow = 3)
+colnames(a) <- LETTERS[1:3]
+
+# basic subsetting on list -< [row,col]
+
+a [2,1]
+a [c(T,F,T), c(T,T,F)]
+a [c(-2), c("C","B")]
+
+b <- outer(1:5, 1:5, FUN = "paste", sep = ",")
+b [c(9,15)]
+
+select <- matrix(ncol = 3, byrow = TRUE, data = paste (c(1,3,2),c(1,1,4), 
+                                                       sep = ","))
+
+b [select]
+#> [1] "1,1" "3,1" "2,4"
+
+```
+
+
+### 2.4 Data Frames
+
+* Data frames possess the characteristics of both lists and matrices : if you subset with a single vector, they behave like lists; if you subset with two vectors, they behave like matrices.
+
+```{r subsetting data frame, include=FALSE}
+
+df <- data.frame(x = 1:3, y = 3:1, z = letters[1:3])
 
 
 
-
+```
 
 
 
