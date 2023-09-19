@@ -761,7 +761,7 @@ str(df[, "x"])
 
 * there are 2 subsetting operator :
   
-  * $ ;
+  * $ : is a shorthand operator, where x$y is equivalent to x[["y", exact = FALSE]]
   
   * [[]] : [[ is similar to [, except it can only return a single value and it allows you to pull pieces out of a list. 
   
@@ -807,8 +807,8 @@ mtcars[["cyl"]]
 |Vector                   |x[[1]]                   |x[1]                         |
 |list                     |x[[1]]                   |x[1]                         |
 |factor                   |x[1:4, drop = T]         |x[1:4]                       |
-|Array                    |x[1,] or x[,1]           |x[1,,drop=F]orx[,1,drop=F]   |
-|Data Frame               |x[,1] or x[[1]]          |x[,1,drop=F]orx[1]           |
+|Array                    |x[1,] or x[,1]           |x[1,,drop=F] or x[,1,drop=F] |
+|Data Frame               |x[,1] or x[[1]]          |x[,1,drop=F] or x[1]         |
 
 
 > Preserving is the same for all data types: you get the same type of output as input. Simplifying behaviour varies slightly between different data types, as described below.
@@ -896,8 +896,54 @@ str(df[,'a'])
 
 ```
 
+### 3.2 Dollar sign ($)
+
+* $ is a shorthand operator, where x$y is equivalent to x[["y", exact = FALSE]] : simplifying
+
+* One common mistake with $ is to try and use it when you have the name of a column stored in a variable
+
+* There’s one important difference between $ and [[. $ does partial matching
+
+```{r common mistake using $, include=FALSE}
+
+# One common mistake with $ is to try and use it when you have the name of a column stored in a variable
+
+mtcars
+
+var <- "cyl" # cyc is one of column name at mtcars data
+
+mtcars$var
+#> NULL
+#> # Doesn't work - mtcars$var translated to mtcars[["var"]]
+
+# instead use [[]] or []
+
+mtcars[var]
+mtcars[[var]]
+```
 
 
+```{r partial matching $ and '[[]]', include=FALSE}
+x <- list (abc = c(1,2,3,4))
+
+# it return same output
+x$a
+# equivalent
+x$ab
+# equivalent
+x$abc
+#> [1] 1 2 3 4
+
+x[["ab"]]
+#> NULL
+
+```
+
+
+### 3.3 Missing/out of bounds indices
+
+* [ and [[ differ slightly in their behaviour when the index is out of bounds
+(OOB).
 
 
 
