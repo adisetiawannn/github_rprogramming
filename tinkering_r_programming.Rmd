@@ -965,14 +965,121 @@ x1[2]
 x1[[NA_real_]]
 ```
 
-## 4. SUBSETTING & ASSIGNMENT
+### 3.4. Subsetting & Assignment
 
 * All subsetting operators can be combined with assignment to modify selected values of the input vector.
 
+```{r subsetting & assignment, include=FALSE}
+x <- c(1:5)
+
+x[c(3,5)] <- c(10,20)
+#> [1]  1  2 10  4 20
+
+# The length of the LHS needs to match the RHS
+x [c(-1,-2)] < 4:1
+# length doesnt match, so it return an error
+
+x [-1] <- 4:1
+#> [1] 1 4 3 2 1
+#> Note that there's no checking for duplicate indices
+
+# You can't combine integer indices with NA
+
+x[c(1, NA)] <- c(1, 2)
+
+#> Error in x[c(1, NA)] <- c(1, 2) : 
+#> NAs are not allowed in subscripted assignments
+
+# But you can combine logical indices with NA
+# (where they're treated as false).
+x[c(T, F, NA)] <- 1
+x
+#> [1] 1 4 3 1 1
+
+# This is mostly useful when conditionally modifying vectors
+df <- data.frame(x = c(1,NA,3,4,5),
+                 y = c(6,7,8,NA,10))
+
+df$x [df$y <= 7]
+#> [1]  6  7 NA
+#> NA will be kept, no matter T or F and it will return NA too.
+#> logical operator will return T or F,then subsetting will logically behave
+
+```
+
+### 3.5 Applications
+
+#### 3.5.1 Lookup Tables (Character Subsetting)
+
+Character matching provides a powerful way to make lookup tables. 
+
+```{r lookup tables, include=FALSE}
+
+# for lookup, keep in my behaviour of subsetting : positive integer, negative integer, character, NULL, ZERO and logical. also, behaviour of data type :vector, list, array etc
+
+x <- c("m", "f", "u", "f", "f", "m", "m")
+lookup <- c(m = "Male", f = "Female", u = NA)
+
+lookup[x] # artinya ambil data lookup sesuai data susunan data x
+
+# remove names
+unname(lookup[x])
+
+x1 <- c(1,2,3,4)
+y1 <- c(T,F,T,F)
+
+x1 [y1] # ambil data x1 sesuai dengan var y1
 
 
+x2 <- -2
+x1 [x2]
 
 
+# lookup in data frame
+df1 = data.frame(gender = c('m','m','f'),
+                 score = c(10,9,11))
+
+df1$gender <- lookup[df1[,1]]
+
+# or
+df2 = data.frame(gender = c('m','m','f'),
+                 score = c(10,9,11))
+
+lookup[df2$gender]
+
+```
+
+#### 3.5.2 Matching and Merging by Hand (Integer subsetting)
+
+* You may have a more complicated lookup table which has multiple columns of information
+
+
+```{r matching and merging on multiple column, include=FALSE}
+
+x <- c(1, 2, 2, 3, 1)
+
+
+df <- data.frame(grade = 3:1,
+                 desc = c("Excellent","Good", "Poor"),
+                 fail = c(F, F, T))
+# 1. with match
+# define id lookup
+id <- match (x = x,table =  df[,"grade"])
+df [id,]
+
+#2. with rownames()
+rownames(df) # from this we know, that row names is character, so convert x as char to return df data as x values
+
+df [as.character (x), ]
+
+# 3. basic subsetting
+# or you can do manually with basic lookup subsetting
+df [df$grade[x],] # ambil data df sesuai dengan posisi df$grade berdasarkan x
+
+
+```
+
+> If you have multiple columns to match on, you’ll need to first collapse them to a single column (with interaction(), paste(), or plyr::id()). You can also use merge() or plyr::join(), which do the same thing for you — read the source code to see how.
 
 
 
