@@ -1151,7 +1151,6 @@ rep(1:nrow(df2), df2$n)
 #> [1] 1 1 1 2 2 2 2 2 3
 
 df2[rep(1:nrow(df2), df2$n), ]
-
 ```
 
 #### 3.4.6 Removing columns from data frames (character subsetting)
@@ -1178,23 +1177,48 @@ df3 [, setdiff(names(df3), "x")] # remove column x
 ```
 
 
+#### 3.4.7 Selecting rows based on a condition (logical subsetting)
+
+* Because it allows you to easily combine conditions from multiple columns, logical subsetting is probably the most commonly used technique for extracting rows out of a data frame
 
 
 
+```{r Selecting rows and cols based on a condition, include=FALSE}
+# selecting rows
+mtcars [mtcars[['gear']],]
+mtcars [mtcars[['gear']] == 5 & mtcars$cyl == 4,]
+
+# selecting col
+mtcars [ , names(mtcars) == "gear" | names(mtcars) == "cyl"  ]
+```
+> Remember to use the vector boolean operators & and |, not the shortcircuiting scalar operators && and || which are more useful inside if statements
+
+1. & Operator adalah operator logis dan juga bitwise, karena beroperasi pada boolean maupun data biner, sedangkan operator && hanyalah operator logis karena hanya beroperasi pada tipe data boolean.
+
+2. Operator & mengevaluasi kedua sisi ekspresi untuk mendapatkan hasil akhir sedangkan, operator && hanya mengevaluasi sisi kiri ekspresi & jika ternyata salah, ia bahkan tidak mengevaluasi sisi kanan ekspresi. 
+
+```{r logical operator, include=FALSE}
+a <- c(T,F,T,T)
+b<- c(T,T,F,F)
+
+# & operator : dia akan mengevaluasi sisi kiri dan kanan, return sesuai panjang kedua input.
+
+a & b 
+#> [1]  TRUE FALSE FALSE FALSE
+
+# && operator : Ketika kita gunakan operator && pada a && b maka yang akan dievaluasi adalah elemen pertama dari a dan b
 
 
+```
 
 
+other logical operator :
 
+* !(X & Y) is the same as !X | !Y
 
+* !(X | Y) is the same as !X & !Y
 
-
-
-
-
-
-
-
+* For example, !(X & !(Y | Z)) simplifies to !X | !!(Y|Z), and then to !X | Y | Z.
 
 
 
