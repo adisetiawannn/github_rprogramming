@@ -1081,7 +1081,7 @@ df [df$grade[x],] # ambil data df sesuai dengan posisi df$grade berdasarkan x
 
 > If you have multiple columns to match on, you’ll need to first collapse them to a single column (with interaction(), paste(), or plyr::id()). You can also use merge() or plyr::join(), which do the same thing for you — read the source code to see how.
 
-#### 3.5.1 Random Samples / Bootstrap (Integer Subsetting)
+#### 3.5.3 Random Samples / Bootstrap (Integer Subsetting)
 
 * You can use integer indices to perform random sampling or bootstrap- ping of a vector or data frame.
 
@@ -1102,7 +1102,7 @@ df [sample(nrow(df), replace = TRUE), ]
 
 ```
 
-#### 3.4.4 Ordering (integer subsetting)
+#### 3.5.4 Ordering (integer subsetting)
 
 * order() takes a vector as input and returns an integer vector describing how the subsetted vector should be ordered (mengurutkan posisinya)
 
@@ -1138,7 +1138,7 @@ df [, order(names(df))]
 
 > More concise, but less flexible, functions are available for sorting vectors, sort(), and data frames, plyr::arrange().
 
-#### 3.4.5 Expanding aggregated counts (integer subsetting)
+#### 3.5.5 Expanding aggregated counts (integer subsetting)
 
 * Sometimes you get a data frame where identical rows have been collapsed into one and a count column has been added. 
 
@@ -1153,7 +1153,7 @@ rep(1:nrow(df2), df2$n)
 df2[rep(1:nrow(df2), df2$n), ]
 ```
 
-#### 3.4.6 Removing columns from data frames (character subsetting)
+#### 3.5.6 Removing columns from data frames (character subsetting)
 
 * There are two ways to remove columns from a data frame : 
   1. You can set individual columns to NULL
@@ -1177,7 +1177,7 @@ df3 [, setdiff(names(df3), "x")] # remove column x
 ```
 
 
-#### 3.4.7 Selecting rows based on a condition (logical subsetting)
+#### 3.5.7 Selecting rows based on a condition (logical subsetting)
 
 * Because it allows you to easily combine conditions from multiple columns, logical subsetting is probably the most commonly used technique for extracting rows out of a data frame
 
@@ -1219,6 +1219,107 @@ other logical operator :
 * !(X | Y) is the same as !X & !Y
 
 * For example, !(X & !(Y | Z)) simplifies to !X | !!(Y|Z), and then to !X | Y | Z.
+
+* subset() is a specialised shorthand function for subsetting data frames, and saves some typing because you don’t need to repeat the name of the data frame.
+
+```{r subset functions, include=FALSE}
+mtcars
+
+
+# subset functions : subset (x, subset/logical conditions, select)
+subset (x = mtcars, subset = cyl > 5, select = c(mpg,qsec))
+
+# subset multiple columns
+subset (mtcars, mpg <= 21 & am != 1 )
+
+# or
+
+subset (mtcars, !(mpg >= 21 | am == 1) ) # !X & !Y
+
+```
+
+
+#### 3.5.8 Boolean algebra vs. sets (logical & integer subsetting)
+
+* It’s useful to be aware of the natural equivalence between set operations (integer subsetting) and boolean algebra (logical subsetting). 
+
+* Using set operations is more effective when :
+
+  1. You want to find the first (or last) TRUE.
+  
+  2. You have very few TRUEs and very many FALSEs; a set representation may be faster and require less storage.
+
+* which() allows you to convert a boolean representation to an integer representation.
+
+```{r which function, include=FALSE}
+x <- sample(100, 10)
+
+which (x < 80)
+
+x [which(x<80)]
+
+# unwhich functions (manually defined)
+ 
+unwhich <- function(x, n) {
+   out <- rep_len(FALSE, n)
+   out[x] <- TRUE
+   out
+}
+unwhich(which(x < 80), 10)
+
+```
+
+Let’s create two logical vectors and their integer equivalents and then explore the relationship between boolean and set operations.
+
+```{r create 2 logical vector and explore relationship between them , include=FALSE}
+x1<-1:10%%2==0 # logical vector
+
+x2 <- which(x1) # integer vector
+
+y1<-1:10%%5==0 # logical vector
+y2 <- which(y1) # integer vector
+
+
+# explore relationship between vector
+# 1. X & Y <-> intersect(x, y) for integer or which (x & y) for logical
+
+x1 & y1
+which (x1 & y1)
+
+intersect (x2,y2)
+
+# 2, #X|Y<->union(x,y)
+union (x2, y2) # subset only return TRUE values
+
+# 3. X & !Y <-> setdiff(x, y)
+setdiff (x2,y2)
+
+# 4. xor(X, Y) <-> setdiff(union(x, y), intersect(x, y)) #kebalikan x dan y
+
+xor (x1, y1)
+
+setdiff(union(x2, y2), intersect(x2, y2))
+
+
+```
+
+
+* key take a note :
+
+  1. which () : switches from logical to integer subsetting
+  
+  2.  x[-which(y)] is not equivalent to x[!y] : if y is all FALSE, which(y) will be integer(0) and -integer(0) is still integer(0)
+  
+  3. In general, avoid switching from logical to integer subsetting unless you want, for example, the first or last TRUE value.
+  
+  
+## 4 VOCABULARY
+
+
+
+
+
+
 
 
 
