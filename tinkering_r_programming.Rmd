@@ -1081,6 +1081,121 @@ df [df$grade[x],] # ambil data df sesuai dengan posisi df$grade berdasarkan x
 
 > If you have multiple columns to match on, you’ll need to first collapse them to a single column (with interaction(), paste(), or plyr::id()). You can also use merge() or plyr::join(), which do the same thing for you — read the source code to see how.
 
+#### 3.5.1 Random Samples / Bootstrap (Integer Subsetting)
+
+* You can use integer indices to perform random sampling or bootstrap- ping of a vector or data frame.
+
+* sample() generates a vector of indices, then subsetting to access the values
+
+```{r random samples (bootstraping), include=FALSE}
+df <- data.frame(x = rep(1:3, each = 2), y = 6:1, z = letters[1:6])
+
+# basic bootstraping
+df [sample(nrow(df)),]
+
+# boostraping 3 rows
+df [sample(nrow(df), 3), ]
+
+# boostraping with replicate/duplicate value indices
+df [sample(nrow(df), replace = TRUE), ]
+
+
+```
+
+#### 3.4.4 Ordering (integer subsetting)
+
+* order() takes a vector as input and returns an integer vector describing how the subsetted vector should be ordered (mengurutkan posisinya)
+
+* For two or more dimensions, order() and integer subsetting makes it easy to order either the rows or columns of an object
+
+```{r ordering subsetting, include=FALSE}
+
+x <- c ("c","b",'a')
+
+order (x)
+#> [1] 3 2 1 -> urutan c b a dalam abjad.
+
+x [order(x)]
+#> [1] "a" "b" "c"
+
+random_sample <- sample (10)
+random_sample[order(random_sample)]
+
+# order two dimension or more with order subsetting
+
+df <- data.frame(x = rep(1:3, each = 2), y = 6:1, z = letters[1:6])
+
+
+# ordering row 
+df [order(df[['y']]), ]
+
+df [order(df$z),]
+
+# ordering col
+df [, order(names(df))]
+
+```
+
+> More concise, but less flexible, functions are available for sorting vectors, sort(), and data frames, plyr::arrange().
+
+#### 3.4.5 Expanding aggregated counts (integer subsetting)
+
+* Sometimes you get a data frame where identical rows have been collapsed into one and a count column has been added. 
+
+* rep() and integer subsetting make it easy to uncollapse the data by subsetting with a repeated row index.
+
+```{r Expanding aggregated counts, include=FALSE}
+df2 <- data.frame(x = c(2, 4, 1), y = c(9, 11, 6), n = c(3, 5, 1))
+
+rep(1:nrow(df2), df2$n)
+#> [1] 1 1 1 2 2 2 2 2 3
+
+df2[rep(1:nrow(df2), df2$n), ]
+
+```
+
+#### 3.4.6 Removing columns from data frames (character subsetting)
+
+* There are two ways to remove columns from a data frame : 
+  1. You can set individual columns to NULL
+  
+  2. you can subset to return only the columns you want
+  
+```{r Removing columns from data frames, include=FALSE}
+df3 <- data.frame(x = c(2, 4, 1), y = c(9, 11, 6), n = c(3, 5, 1))
+
+# 1. Removing columns from data frames
+df3$y <- NULL
+df3
+
+# 2.  subset to return only the columns you want
+df3 [, c("x","n")]
+
+# or
+# combine with setdiff () function
+df3 [, setdiff(names(df3), "x")] # remove column x
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
