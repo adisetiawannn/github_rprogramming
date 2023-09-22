@@ -1662,4 +1662,96 @@ ifelse
 
 * replicate
 
+### 4.2 Common data structures
+
+#### 4.2.1 Date time
+
+ISOdate, ISOdatetime, strftime, strptime, date
+difftime
+julian, months, quarters, weekdays
+library(lubridate)
+
+#### 4.2.2 Character manipulation
+
+
+* grep, agrep : search for matches to argument pattern within each element of a character vector
+
+* gsub, sub :  replacement of the first and all matches respectively
+
+* strsplit : Split the elements of a character vector x into substrings according to the matches to substring split within them
+
+* chartr : Translate characters in character vectors, in particular from upper to lower case or vice versa (merubah beberapa karakter/element ke beberapa element/character lain)
+
+* nchar
+
+* tolower, toupper
+
+* substr : Extract or replace substrings in a character vector. (seperti fungsi mid di excel)
+
+* paste : Concatenate vectors after converting to character.
+
+* packages also have same functions : stringr
+
+```{r character manipulation, include=FALSE}
+
+x <- c('adi','setiawan','learn','rprogramming')
+
+# 1. grep, agrep : search for matches to argument pattern within each element of a character vector
+
+grep('[mm]', x)
+#> [1] 4
+
+grep(pattern = 'adi', x)
+#> [1] 1
+
+
+# 2. gsub :  replacement of the first and all matches respectively
+
+gsub(pattern = 'adi',replacement = 'ADI', x = x)
+
+
+# 3. chartr : Translate characters in character vectors, in particular from upper to lower case or vice versa (merubah beberapa karakter/element ke beberapa element/character lain)
+
+chartr("awi",new = 'AWI', x)
+#> [1] "AdI"          "setIAWAn"     "leArn"        "rprogrAmmIng"
+
+
+# 4. substr : Extract or replace substrings in a character vector.
+substr(x, start = 1, stop = 3)
+#> "adi" "set" "lea" "rpr"
+
+
+# 5. paste : Concatenate vectors after converting to character.
+
+paste(x[1], x[2], sep = " ")
+#> [1] "adi setiawan"
+
+```
+
+#### 4.2.3 Factors
+
+* factor, levels, nlevels
+
+* reorder, relevel
+
+* cut, findInterval
+
+* interaction
+
+* options(stringsAsFactors = FALSE)
+
+
+```{r factor vocabulary, include =FALSE}
+
+# 1. Factor
+
+factor(levels = c('male','female'))
+
+
+```
+
+
+is.factor(factor(levels = c('male','female')))
+        
+
 
