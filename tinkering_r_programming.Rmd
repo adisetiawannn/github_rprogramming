@@ -1576,10 +1576,90 @@ invisible(coba_function2())
 #> 
 ```
 
+#### 4.1.6 Logical & sets
+
+* &,|,!,xor
+
+* all : Given a set of logical vectors, are all of the values true?
+
+* any : Given a set of logical vectors, are all of the values true?
+
+* intersect : finds all rows in both x and y.
+
+* union : finds all rows in either x or y, excluding duplicates.
+
+* setdiff :setdiff(x, y) finds all rows in x that aren't in y.
+
+* setequal :  returns TRUE if x and y contain the same rows (ignoring order).
+
+* which : Give the TRUE indices of a logical object, allowing for array indices.
 
 
+#### 4.1.7 Vectors and matrices
 
+* c : create vector
 
+* matrix : create matrix
 
+#### 4.1.8 automatic coercion rules character > numeric > logical
+
+* length, dim, ncol, nrow
+
+* cbind, rbind : binding col or row
+
+* names, colnames, rownames : get a index names or col names or row names
+
+* t : transpose matrix
+
+* diag : Extract or replace the diagonal of a matrix, or construct a diagonal matrix.
+
+* sweep : Return an array obtained from an input array by sweeping out a summary statistic.
+
+* as.matrix, data.matrix : convert data to matrix
+
+#### 4.1.8 Making Vectors
+
+* c
+
+* rep, rep_len : rep replicates the values in x
+
+* seq, seq_len, seq_along : Generate regular sequences
+
+* rev : rev provides a reversed version of its argument. It is generic function with a default method for vectors and one for dendrograms.
+
+* sample :sample takes a sample of the specified size from the elements of x using either with or without replacement
+
+* choose, factorial, combn (is/as).(character/numeric/logical/...)
+
+#### 4.1.9 Lists & data.frames
+* list, unlist
+
+* data.frame, as.data.frame
+
+* split : split divides the data in the vector x into the groups defined by f
+
+* expand.grid : Create a data frame from all combinations of the supplied vectors or factors
+
+#### 4.1.10 Control flow
+
+if, &&, || (short circuiting)
+
+for, while
+
+next, break
+
+switch
+
+ifelse
+
+#### 4.1,11 Apply & friends
+
+* lapply, sapply, vapply
+
+* apply
+
+* tapply
+
+* replicate
 
 
