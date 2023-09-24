@@ -2018,6 +2018,102 @@ rm(j)
 
 > You might be surprised that it returns the same value, 1, every time. This is because every time a function is called, a new environment is created to host execution. A function has no way to tell what happened the last time it was run; each invocation is completely independent.
 
+#### 5.2.4 Dynamic lookup
+
+* Lexical scoping determines where to look for values, not when to look for
+them
+
+* R looks for values when the function is run, not when it’s created.
+This means that the output of a function can be different depending on
+objects outside its environment
+
+
+```{r dynamic lookup, include=FALSE}
+
+y <- function () {x}
+
+x <- 2
+y()
+#> [1] 2
+
+x <- 10
+y()
+#> [1] 10
+```
+
+* You generally want to avoid this behaviour because it means the function
+is no longer self-contained
+
+* due to, it;s depending on what variables are defined in the global environment.
+
+* One way to detect this problem is the findGlobals() function from
+codetools : to lists all the external dependencies of a function
+
+* Another way to try and solve the problem would be to manually change
+the environment of the function to the emptyenv() : an environment which
+contains absolutely nothing
+
+```{r dynamic lookup findGlobals, include=FALSE}
+
+# 1. findGlobals ()
+z <- function () {x+1}
+
+codetools::findGlobals(z)
+#> [1] "{" "+" "x"
+
+# 2. emptyenv() : Get, set, test for and create environments.
+
+environment(z) <- emptyenv()
+z ()
+#> Error in { : could not find function "{"
+
+# This doesn’t work because R relies on lexical scoping to find everything, even the {} operator.
+
+```
+
+
+## 6. Every operation is a function call 
+
+“ To understand computations in R, two slogans are helpful:
+
+  * Everything that exists is an object.
+  
+  * Everything that happens is a function call.”
+
+—- John Chambers
+
+
+> Note that `, the backtick, lets you refer to functions or variables that have otherwise reserved or illegal names
+
+```{r everything is a function call, include=FALSE}
+
+x <- 10
+y <- 5
+x+y
+
+#> [1] 15
+
+'+'(x,y)
+#> [1] 15
+
+for (i in seq(1,3,1)) 
+  print (i)
+#> [1] 1
+#> [1] 2
+#> [1] 3
+
+'for'(i,seq(1,3,1), print (i))
+#> [1] 1
+#> [1] 2
+#> [1] 3
+
+if (i == 3)
+  print ('yes')
+else 
+  print ('nope')
+
+```
+
 
 
 
