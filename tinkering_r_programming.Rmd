@@ -1730,13 +1730,13 @@ paste(x[1], x[2], sep = " ")
 
 #### 4.2.3 Factors
 
-* factor, levels, nlevels
+* factor, levels, nlevels, gl
 
 * reorder, relevel
 
 * cut, findInterval
 
-* interaction
+* interaction : interaction computes a factor which represents the interaction of the given factors. The result of interaction is always unordered.
 
 * options(stringsAsFactors = FALSE)
 
@@ -1745,13 +1745,281 @@ paste(x[1], x[2], sep = " ")
 
 # 1. Factor
 
-factor(levels = c('male','female'))
+# vector 
+x <- c('m','m','f','m','f')
+
+factor(x = x,levels = c('m','f'))
 
 
 ```
 
 
-is.factor(factor(levels = c('male','female')))
-        
+#### 4.2.4 Array manipulation
+
+* array
+
+* dim
+
+* dimnames
+
+* aperm : Transpose an array by permuting its dimensions and optionally resizing it.
+
+* library(abind)      
+
+### 4.3 Statistics
+
+#### 4.3.1 Ordering and tabulating
+* duplicated, unique
+
+* merge
+
+* order, rank, quantile
+
+* sort
+
+#### 4.3.2 Linear models
+
+* fitted, predict, resid, rstandard
+
+* lm, glm
+
+* hat, influence.measures
+
+* logLik, df, deviance
+
+* formula, ~, I
+
+* anova, coef, confint, vcov
+
+* contrasts
+
+* table, ftable
+
+### 4.4 I/O Vocabulary
+#### 4.4.1  Output
+
+* print, cat
+
+* message, warning
+
+* dput
+
+* format
+
+* sink, capture.output
+
+#### 4.4.2 Reading and writing data
+
+* data
+* count.fields
+* read.csv, write.csv
+* read.delim, write.delim
+* read.fwf
+* readLines, writeLines
+* readRDS, saveRDS
+* load, save
+* library(foreign)
+
+#### 4.4.3 Files and directories
+* dir
+* basename, dirname, tools::file_ext
+* file.path
+* path.expand, normalizePath
+* file.choose
+* file.copy, file.create, file.remove, file.rename, dir.create file.exists, file.info
+* tempdir, tempfile
+* download.file, library(downloader)
+
+## 5. Functions
+
+* The most important thing to understand about R is that functions are objects in their own right
+
+### 5.1 Function Components
+
+3 components of functions : 
+
+* the body(), the code inside the function. (in {})
+
+* the formals(), the list of arguments which controls how you can call the function.
+
+* theenvironment(),the “map” of the location of the function’s variables.
+
+* When you print a function in R, it shows you these three important components. **If the environment isn’t displayed**, it means that the function was created in the global environment.
+
+```{r function components, include=FALSE}
+
+f<- function (x) {x^2}
+
+#how to check formals functions
+formals(f)
+#> $x
+
+#  check environment functions
+environment(f)
+#> <environment: R_GlobalEnv>
+
+# detail of f function 
+# body function : x^2
+# formals : $x
+# environment : R_GlobalEnv>
+```
+
+* functions can also possess any number of additional attributes()
+
+* One attribute used by base R is “srcref”, short for source reference
+
+* this contains code comments and other formatting. You can also add attributes to a function. For example, you can set the class() and add a custom print() method
+
+#### 5.1.1 Primitive Functions
+
+* There is one exception to the rule that functions have three components. Primitive functions, like sum().
+
+* Therefore their formals(), body(), and environment() are all NULL
+
+* Primitive functions are only found in the base package,
+
+
+### 5.2 Lexical scoping
+
+* Scoping is the set of rules that govern how R looks up the value of a symbol.
+
+* Understanding scoping allows you to:
+
+  1. build tools by composing functions
+  
+  2. overrule the usual evaluation rules and do non-standard evaluation
+  
+* R has two types of scoping : 
+  
+  1. lexical scoping, implemented automatically at the language level
+  
+  2. dynamic scoping, used in select functions to save typing during interactive analysis
+
+* Lexical scoping looks up symbol values based on how functions were nested when they were created
+
+* With lexical scoping, you don’t need to know how the function is called to figure out where the value of a variable will be looked up. You just need to look at the function’s definition.
+
+* There are four basic principles behind R’s implementation of lexical scoping:
+
+  1. name masking
+  
+  2. functions vs. variables
+  
+  3. a fresh start
+  
+  4. dynamic lookup
+  
+#### 5.2.1 Name Masking
+
+```{r name masking, include=FALSE}
+
+d <- function() {
+  x<-1
+  y<-2
+  c(x, y) }
+
+d() 
+
+rm(d)
+
+# If a name isn’t defined inside a function, R will look one level up.
+
+x<-2
+g <- function() {
+  y<-1
+  c(x, y) }
+
+g() 
+
+rm(x, g)
+```
+
+* The same rules apply if a function is defined inside another function: look inside the current function, then where that function was defined, and so on, all the way up to the global environment, and then on to other loaded packages. Run the following code in your head, then confirm the output by running the R code.
+
+```{r name masking on nested function, include=FALSE}
+
+x<-1
+h <- function() {
+  y<-2
+  i <- function() { 
+    z<-3
+    c(x, y, z) }
+  i() }
+
+h() 
+
+rm(x, h)
+
+
+j <- function(x) {
+  y<-2
+  function() {
+    c(x, y)
+    } }
+k <- j(1)
+k()
+rm(j, k)
+```
+
+#### 5.2.2 Functions vs. variables
+
+* The same principles apply regardless of the type of associated value — finding functions works exactly the same way as finding variables
+
+```{r functions vs variable, include=FALSE}
+
+l <- function(x) x + 1
+
+m <- function() {
+  l <- function(x) x * 2
+  l(10)
+}
+
+m()
+#> [1] 20 -> it show r scoping on local first
+
+
+rm(l,m)
+
+
+```
+
+* If you are using a name in a context where it’s obvious that you want a function. R will ignore objects that are not functions while it is searching. In the following example n takes on a different value depending on whether R is looking for a function or a variable
+
+```{r}
+n <- function(x) x / 2
+o <- function() {
+  n<-10
+  n(n) }
+
+o() 
+#>[1]5 
+
+rm(n, o)
+```
+
+> However, using the same name for functions and other objects will make for confusing code, and is generally best avoided.
+
+#### 5.2.3 Fresh Start
+
+* What happens to the values in between invocations of a function? What will happen the first time you run this function? What will happen the second time? (If you haven’t seen exists() before: it returns TRUE if there’s a variable of that name, otherwise it returns FALSE.)
+
+```{r}
+
+j <- function() {
+  if (!exists("a")) {
+    a<-1 }
+  else{
+    a<-a+1 }
+  print(a) }
+
+j() 
+rm(j)
+```
+
+> You might be surprised that it returns the same value, 1, every time. This is because every time a function is called, a new environment is created to host execution. A function has no way to tell what happened the last time it was run; each invocation is completely independent.
+
+
+
+
 
 
