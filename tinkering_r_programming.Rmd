@@ -2234,7 +2234,7 @@ f <- function(x) {
 f(stop("This is an error!"))
 #> Error: This is an error!
 f(1)
-#> [1] 10 force : Forces the evaluation of a function argument.
+#> [1] 10 force : Forces the evaluation of a function argument is it TRUE or FALSE.
 
 # This is important when creating closures with lapply() or a loop
 
@@ -2408,18 +2408,197 @@ x$a
 
   7. Random number generators which produce different numbers each time you run them.
 
+* how to deal with invisible value ? You can force an invisible value to be displayed by wrapping it in parentheses:
+
+```{r force an invisible value, include=FALSE}
+
+f1 <- function () 1
+f2 <- function () invisible (1)
+
+f1 () == 1
+#> [1] TRUE
+
+f2()
+#> 
+
+# to show value of f2, you can force invisible function by wrapping it with in "()" paranthesis :
+
+(f2())
+#> [1] 1
+
+# The most common function that returns invisibly is <-:
+a <- 2
+(a <- 2)
+#> [1] 2
+
+```
+
+### 6.1 On Exit
+
+* functions can set up other triggers to occur when the function is finished using on.exit().
+
+* This is often used as a way to guarantee that changes to the global state are restored when the function exits.
+
+* The code in on.exit() is run regardless of how the function exits, whether with an explicit (early) return, an error, or simply reaching the end of the function body.
+
+```{r on exit, include=FALSE}
+in_dir <- function (dir,code) {
+  old <- setwd(dir)
+  on.exit(setwd(old))
+  
+  force (code)
+}
+
+old <- getwd()
+in_dir("~", old)
+#> [1] "D:/DATA-ADI/git_github/github_rprogramming/github_rprogramming"
 
 
+```
+* The basic pattern is simple:
+
+  * We first set the directory to a new location, capturing the current location from the output of setwd().
+  
+  * We then use on.exit() to ensure that the working directory is returned
+to the previous value regardless of how the function exits.
+
+  * Finally, we explicitly force evaluation of the code. (We don’t actually
+need force() here, but it makes it clear to readers what we’re doing.)
+
+> Caution: If you’re using multiple on.exit() calls within a function, make sure to set add = TRUE. Unfortunately, the default in on.exit() is add = FALSE, so that every time you run it, it overwrites existing exit expressions. Because of the way on.exit() is implemented, it’s not possible to create a variant with add = TRUE, so you must be careful when using it.
+
+## 7. OO (object oriented) field guide
+
+* This chapter is a field guide for recognising and working with R’s objects in the wild
+
+* R has three object oriented systems plus the base types : S3, S4, refference classes and base types
+
+* The goal of this guide is not to make you an expert in all four systems, but to help you identify which system you’re working with and to help you use it effectively
+
+* Central to any object-oriented system are the concepts of class and method.
+
+* **A class defines the behaviour of objects by describing their attributes and their relationship to other classes.**
+
+* **The class is also used when selecting methods, functions that behave differently depending on the class of their input.**
+
+* Classes are usually organised in a hierarchy: if a method does not exist for a child, then the parent’s method is used instead; the child inherits behaviour from the parent.
+
+* R’s three OO systems differ in how classes and methods are defined:
+
+  1. S3
+  
+  * S3 implements a style of OO programming called generic function OO.
+  
+  * This is different from most programming languages, like Java, C++, and C#, which implement message-passing OO.
+  
+  * With message passing, messages (methods) are sent to objects and the object determines which function to call. Typically, this object has a special appearance in the method call, usually appearing before the name of the method/message: e.g., canvas.drawRect("blue").
+  
+  * While computations are still carried out via methods, a special type of function called a generic function decides which method to call, e.g., drawRect(canvas, "blue"). S3 is a very casual system. It has no formal definition of classes.
+  
+  2. S4
+  
+  * S4 works similarly to S3, but is more formal
+
+  * There are two major differences to S3 : 
+  
+    1. S4 has formal class definitions, which describe the representation and inheritance for each class
+    
+    2. special helper functions for defining generics and methods.
+    
+  * S4 also has multiple dispatch, which means that generic functions can pick methods based on the class of any number of arguments, not just one.
+  
+  3. Reference classes
+  
+  * called RC for short, are quite different from S3 and S4.
+  
+  * RC implements message-passing OO so methods belong to classes, not functions.
+  
+  * $ is used to separate objects and methods, so method calls look like canvas$drawRect("blue").
+  
+  * RC objects are also mutable: they don’t use R’s usual copy-on-modify semantics, but are modified in place.
+  
+  * This makes them harder to reason about, but allows them to solve problems that are difficult to solve with S3 or S4.
+
+  4. Base Types
+  
+  * Base types are mostly manipulated using C code
+  
+  * they’re important to know about because they provide the building blocks for the other OO systems.
 
 
+* You’ll learn how to recognise the OO system that an object belongs to, how method dispatch works, and how to create new objects, classes, generics, and methods for that system. The chapter concludes with a few remarks on when to use each system.
+
+### 7.1 Base Types
+
+* Underlying every R object is a C structure (or struct) that describes how that object is stored in memory
+
+* The struct (C structure) includes the contents of the object, the information needed for memory management, and, most importantly for this section, a type.
+
+* This is the base type of an R object. Base types are not really an object system because only the R core team can create new types.
+
+* e.g. of base types : atomic vector, is function such as is.integer(), isfunction(), is primitive() etc.
+
+* To see if an object is a pure base type : i.e., it doesn’t also have S3, S4, or RC behaviour, check that is.object(x)
+
+```{r check is it base types, include=FALSE}
+x <- c(1:10)
+
+is.object(x)
+#> [1] FALSE
+# FALSE means x is a base types object
+
+f <- function (x,y,z) {
+  x^2 + y/2 + z+1 
+}
+
+f(10,11,12)
+is.object(f)
+#> [1] FALSE
 
 
+```
+### 7.2 S3
 
+* S3 is R’s first and simplest OO system.
 
+* it’s the most commonly used system in CRAN packages.
 
+#### 7.2.1 Recognising objects, generic functions, and methods
 
+* Most objects that you encounter are S3 objects.
 
+* The closest way to check whether S3 object : you can come is is.object(x) &!isS4(x), i.e., it’s an object, but not S4. 
 
+* An easier way is to use pryr::otype():
+
+```{r check object type, include=FALSE}
+install.packages('pryr')
+library(pryr)
+
+x <- 1:10
+
+pryr::otype(x)
+#> [1] "base"
+
+df1 <- data.frame(a = 1:5, b = letters[6:10])
+otype(df1)
+#> [1] "S3"
+
+class(df1)
+#> [1] "data.frame"
+
+otype(df1$a)
+#> [1] "base" -> this means vector isnt S3 object
+
+otype(df1$b)
+#> [1] "base" -> this means character isnt S3 object
+
+otype(as.factor(df1$b))
+#> [1] "S3" -> this means factor is S3 object
+```
+
+* In S3, methods belong to functions, called generic functions, or generics
+for short. S3 methods do not belong to objects or classes.
 
 
 
