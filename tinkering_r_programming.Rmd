@@ -2540,12 +2540,12 @@ need force() here, but it makes it clear to readers what we’re doing.)
 
 * To see if an object is a pure base type : i.e., it doesn’t also have S3, S4, or RC behaviour, check that is.object(x)
 
-```{r check is it base types, include=FALSE}
+```{r check is it pure base types, include=FALSE}
 x <- c(1:10)
 
 is.object(x)
 #> [1] FALSE
-# FALSE means x is a base types object
+# FALSE means x is a pure base types object
 
 f <- function (x,y,z) {
   x^2 + y/2 + z+1 
@@ -2597,12 +2597,89 @@ otype(as.factor(df1$b))
 #> [1] "S3" -> this means factor is S3 object
 ```
 
-* In S3, methods belong to functions, called generic functions, or generics
-for short. S3 methods do not belong to objects or classes.
+* In S3, methods belong to functions, called generic functions, or generics for short. S3 methods do not belong to objects or classes.
+
+* To determine if a function is an S3 generic, you can inspect its source code for a call to UseMethod():
+
+* that’s the function that figures out the correct method to call, the process of method dispatch
+
+* Similar to otype(), pryr also provides ftype() which describes the object system, if any, associated with a function.
+
+```{r determine if a function is an S3 generic, include=FALSE}
+install.packages('pryr')
+library(pryr)
+
+mean
+#> function (x, ...) 
+#> UseMethod("mean")
+#> <bytecode: 0x10a9acdc8>
+#> <environment: namespace:base>
+
+otype(mean)
+#> [1] "base"
+
+ftype(mean)
+#> [1] "s3"      "generic"
+
+```
+
+* Some S3 generics, like [, sum(), and cbind(), don’t call UseMethod() because they are implemented in C (pure base type)
+
+* Functions that do method dispatch in C code are called **internal generics** and are documented in ?"internal generic". -> generic functions yang tidak membutuhkan method.
+
+* Given a class, the job of an S3 generic is to call the right S3 method. You can recognise S3 methods by their names, which look like generic.class()
+
+* For example, the Date method for the mean() generic is called mean.Date(), and the factor method for print() is called print.factor().
 
 
 
 
+* summary :
+  
+  1. ada beberapa S3 object yang tidak bisa menggunakan call method seperti : like [, sum(), and cbind(), don’t call UseMethod() because they are implemented in C (pure base type)
+  
+  2. ada juga S3 object yang bisa menggunakan call method (ini disebut internal generics).
+  
+  3. untuk mengindetifikasi function dan method. prinsipnya di R, method adalah milik function sehingga dalam penulisannya akan selalu ''' functions "." method '''. contohnya :  mean.date() : mean : fungsi dan date : method/call
+  
+  4. kita bisa melihat semua method yang bisa dipanggil untuk fungsi yang dipakai dengan cara : methods('nama fungsi'). contoh : methods(mean)
+  
+  5. selain itu, kita juga bisa melihat semua list function/generics yang bisa digunakan untuk memanggil suatu method/call tertentu. dengan cara, methods(class = "nama_method"). contoh : methods (class = ts) atau methods(class = data.frame)
+
+```{r S3 generic, include=FALSE}
+mean # mean have a call method
+#> function (x, ...) 
+#> UseMethod("mean")
+#> <bytecode: 0x10a9acdc8>
+#> <environment: namespace:base>
+
+sum # sum doesnt have call method cause it is pure base type
+#> function (..., na.rm = FALSE)  .Primitive("sum")
+
+ftype(t.data.frame) # # data frame method for t() functions
+#> [1] "s3"     "method"
+
+ftype(t.test)
+#> "s3"      "generic"
+
+# You can see all the methods that belong to a generic with methods():
+
+methods(mean)
+#> [1] mean.Date        mean.default     mean.difftime    mean.POSIXct     mean.POSIXlt    
+#> [6] mean.quosure*    mean.vctrs_vctr*
+#> see '?methods' for accessing help and source code
+
+methods(t.test)
+#> [1] t.test.default* t.test.formula*
+#> see '?methods' for accessing help and source code
+
+#> Non-visible functions are asterisked
+
+# You can also list all generics that have a method for a given class:
+
+methods(class = data.class)
+
+```
 
 
 
