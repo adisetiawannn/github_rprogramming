@@ -2640,9 +2640,9 @@ ftype(mean)
   
   2. ada juga S3 object yang bisa menggunakan call method (ini disebut internal generics).
   
-  3. untuk mengindetifikasi function dan method. prinsipnya di R, method adalah milik function sehingga dalam penulisannya akan selalu ''' functions "." method '''. contohnya :  mean.date() : mean : fungsi dan date : method/call
+  3. untuk mengindetifikasi function dan method. prinsipnya di R, method adalah milik function sehingga dalam penulisannya akan selalu ''' method "." fungsi '''. contohnya :  mean.date() : mean : method dan date : fungsi
   
-  4. kita bisa melihat semua method yang bisa dipanggil untuk fungsi yang dipakai dengan cara : methods('nama fungsi'). contoh : methods(mean)
+  4. kita bisa melihat semua method yang bisa dipanggil untuk fungsi yang dipakai dengan cara : methods('nama methods'). contoh : methods(mean)
   
   5. selain itu, kita juga bisa melihat semua list function/generics yang bisa digunakan untuk memanggil suatu method/call tertentu. dengan cara, methods(class = "nama_method"). contoh : methods (class = ts) atau methods(class = data.frame)
 
@@ -2662,7 +2662,7 @@ ftype(t.data.frame) # # data frame method for t() functions
 ftype(t.test)
 #> "s3"      "generic"
 
-# You can see all the methods that belong to a generic with methods():
+# 2. You can see all the methods that belong to a generic with methods():
 
 methods(mean)
 #> [1] mean.Date        mean.default     mean.difftime    mean.POSIXct     mean.POSIXlt    
@@ -2675,18 +2675,39 @@ methods(t.test)
 
 #> Non-visible functions are asterisked
 
-# You can also list all generics that have a method for a given class:
+# 3. You can also list all generics that have a method for a given class:
 
-methods(class = data.class)
+methods(class = data.frame)
+
+methods(class = ts)
 
 ```
 
+#### 7.2.2 Defining classes and creating objects
+
+* S3 is a simple and ad hoc system; it has no formal definition of a class.
+
+* To make an object an instance of a class, you just take an existing base object and set the class attribute
+
+* You can do that during creation with structure(), or after the fact with class<-() :
+
+* You can determine the class of any object using class(x), and see if an object inherits from a specific class using inherits(x, "classname").
+
+```{r create class, include=FALSE}
+# Create and assign class in one step
+foo <- structure(list(), class = "hallow")
+
+# Create, then set class
+foo <- list()
+class(foo) <- "wwooww"
 
 
+# inherits "checking class values"
 
+inherits (foo,"wwooww")
+#> [1] TRUE
 
-
-
+```
 
 
 
