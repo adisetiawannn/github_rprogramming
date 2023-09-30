@@ -1,0 +1,107 @@
+---
+title: "Plot Layer of ggplot"
+author: "M Adi Setiawan"
+date: "2023-09-10"
+output: html_document
+---
+reff : https://ggplot2-book.org/introduction
+
+```{r library, include=FALSE}
+library(ggplot2)
+```
+
+```{r raw data, include=FALSE}
+raw_data <- mtcars
+```
+
+> tilde (~) : to separate the left hand side of an equation from the right hand side.
+* left side of the tilde operator (y) represents the response variable. (dependent var)
+* right side of the tilde operator (x1, x2) represent the predictor variables. (independent var)
+
+
+## A. BASIC LAYER OF GGPLOT
+
+ggplot(data = NULL, mapping = aes(), ..., environment = parent.frame()
+
+* Key components of ggplot : 
+  
+  1. data
+  
+  2. aes / aesthetics : A set of aesthetic mappings between variables in the data and visual properties
+  
+  3. additional layer : At least one layer which describes how to render each observation. Layers are usually created with a geom function.
+
+* for more detail documentation about ggplot :  library(help = "ggplot2" )
+
+```{r basic ggplot, include=FALSE}
+data <- mtcars
+
+# basic ggplot
+
+ggplot(data = data, mapping = aes(x = mpg, y = disp) ) + geom_point()
+
+```
+
+
+
+
+
+### Arguments :
+
+* data: A dataset which overrides the default plot dataset.
+
+* mapping: A set of aesthetic mappings
+    
+    Mapping aesthetics include some of the following:
+    
+    1. the x and y data arguments
+    
+    2. shapes
+    
+    3. color
+    
+    4. fill
+    
+    5. size
+    
+    6. linetype
+    
+    7. alpha
+
+
+
+* geom: The name of the geometric object to use to draw each observation.Geoms can have additional arguments. All geoms take aesthetics as parameters. If you supply an aesthetic (e.g. colour) as a parameter, it will not be scaled, allowing you to control the appearance of the plot.
+  
+  list argument that can be used in geom :
+  1. size
+  
+  2. shape
+  
+  3. color 
+
+* list of geom functions : 
+  1. geom_point() : fits a scatter plot (relationship plot) of x dan y values.
+  
+  2. geom_smooth() fits a smoother to the data and displays the smooth and its standard error.
+
+  3. geom_boxplot() produces a box-and-whisker plot to summarise the distribution of a set of points.
+
+  4. geom_histogram() and geom_freqpoly() show the distribution of continuous variables.
+
+  5. geom_bar() shows the distribution of categorical variables.
+
+  6. geom_path() and geom_line() draw lines between the data points. A line plot is constrained to produce lines that travel from left to right, while paths can go in any direction. Lines are typically used to explore how things change over time.
+
+
+* stat: The name of the statistical tranformation to use. A statistical transformation performs some useful statistical summary, and is key to histograms and smoothers.
+
+> You only need to set one of stat and geom: every geom has a default stat, and every stat a default geom.Most stats take additional parameters to specify the details of statistical transformation.
+
+* position: The method used to adjust overlapping objects, like jittering, stacking or dodging.
+
+
+```{r raw data, include=TRUE,warning=FALSE}
+
+
+
+```
