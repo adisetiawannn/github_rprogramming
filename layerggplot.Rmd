@@ -25,7 +25,7 @@ ggplot(data = NULL, mapping = aes(), ..., environment = parent.frame()
 
 * Key components of ggplot : 
   
-  1. data
+  1. data :  A dataset which overrides the default plot dataset.
   
   2. aes / aesthetics : A set of aesthetic mappings between variables in the data and visual properties
   
@@ -34,40 +34,55 @@ ggplot(data = NULL, mapping = aes(), ..., environment = parent.frame()
 * for more detail documentation about ggplot :  library(help = "ggplot2" )
 
 ```{r basic ggplot, include=FALSE}
+library (ggplot2)
 data <- mtcars
 
 # basic ggplot
 
 ggplot(data = data, mapping = aes(x = mpg, y = disp) ) + geom_point()
 
+#This produces a scatterplot defined by:
+
+# Data: data = mtcars
+# Aesthetic mapping: mpg : 	Miles/(US) gallon mapped to x position, disp : displacement (cu.in.) to y position.
+# Layer: points.
+
 ```
 
+## B. Colour, Size, Shape and other aesthetic attributes
+
+* ggplot have american and british spelling, both are works. ex : color and colour
+
+
+### B.1 Aesthetics / aes () Attributes :
+
+* aesthetics include some of the following:
+    
+  1. the x and y data arguments (mandatory)
+    
+  2. shapes
+    
+  3. colour
+    
+  4. fill
+    
+  5. size
+    
+  6. linetype
+    
+  7. alpha
+
+```{r basic aesthetics attributes, include = False}
+
+# basic graph
+
+ggplot(data, mapping = aes(x = mpg, y = disp, 
+                           colour = cyl)) + geom_point()
 
 
 
 
-### Arguments :
-
-* data: A dataset which overrides the default plot dataset.
-
-* mapping: A set of aesthetic mappings
-    
-    Mapping aesthetics include some of the following:
-    
-    1. the x and y data arguments
-    
-    2. shapes
-    
-    3. color
-    
-    4. fill
-    
-    5. size
-    
-    6. linetype
-    
-    7. alpha
-
+```
 
 
 * geom: The name of the geometric object to use to draw each observation.Geoms can have additional arguments. All geoms take aesthetics as parameters. If you supply an aesthetic (e.g. colour) as a parameter, it will not be scaled, allowing you to control the appearance of the plot.
