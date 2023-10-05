@@ -19,6 +19,7 @@ raw_data <- mtcars
 > tilde (~) : to separate the left hand side of an equation from the right hand side.
 * left side of the tilde operator (y) represents the response variable. (dependent var)
 * right side of the tilde operator (x1, x2) represent the predictor variables. (independent var)
+* complete graph should have : data, mapping aes, labs (x=,y=) , theme (title), xlim(x1,x2) and ylim (y1,y2) 
 
 # 1 Getting Started
 
@@ -225,8 +226,59 @@ ggplot(data, mapping = aes(x = mpg, y = disp)) + geom_point() +
 * geom_text() adds text to a plot. It requires a label aesthetic that provides the text to display, and has a number of parameters (angle, family, fontface, hjust and vjust) that control the appearance of the text.
 
 ```{r basic geom, include=FALSE}
-
-ggplot (data, mapping = aes(x = mpg, y = disp)) + geom_point() + geom_text(size = 10)
+ggplot (data, mapping = aes(x = mpg, y = disp)) + geom_point() + geom_text(aes(label = mpg), family = "Times New Roman")
 
 ```
+
+## B. Collective Geom
+
+* An individual geom draws a distinct graphical object for each observation (row). For example, the point geom draws one point per row. 
+
+* A collective geom displays multiple observations with one geometric object. This may be a result of a statistical summary, like a boxplot, or may be fundamental to the display of the geom, like a polygon.
+
+* Lines and paths fall somewhere in between: each line is composed of a set of straight segments, but each segment represents two points. How do we control the assignment of observations to graphical elements? This is the job of the **group aesthetic.**
+
+* by default, the **group aesthetic** is mapped to the interaction of all discrete variables in the plot.
+
+* his often partitions the data correctly, but when it does not, or when no discrete variable is used in a plot, you’ll need to explicitly define the grouping structure by mapping group to a variable that has a different value for each group.
+
+* If a group isn’t defined by a single variable, but instead by a combination of multiple variables, use **interaction()** to combine them, e.g. aes(group = interaction(school_id, student_id)).
+
+### B.1 Multiple groups, one aesthetic
+
+* in many situations, you want to separate your data into groups, but render them in the same way. In other words, you want to be able to distinguish individual subjects, but not identify them
+
+* the following plot shows the growth trajectory for each boy (each Subject)
+
+```{r collcetive geom, include=FALSE}
+data(Oxboys, package = "nlme")
+
+ggplot(Oxboys, mapping = aes(x = age, y = height)) + geom_point() + geom_line() # If you incorrectly specify the grouping variable, you’ll get a characteristic sawtooth appearance
+
+ggplot(Oxboys, mapping = aes(x = age, y = height, group = Subject, color = Subject)) + geom_point() + geom_line()
+
+# If a group isn’t defined by a single variable, but instead by a combination of multiple variables, use interaction() to combine them, e.g. aes(group = interaction(school_id, student_id)).
+```
+
+### B.2 Different groups on different layers
+
+* Sometimes we want to plot summaries that use different levels of aggregation: one layer might display individuals, while another displays an overall summary. 
+
+* tips : instead of setting the grouping aesthetic in ggplot(), where it will apply to all layers, we set it in geom_line() so it applies only to the lines
+
+```{r different groups on different layers, include=FALSE}
+# This is not what we wanted
+ggplot(Oxboys, aes(age, height, group = Subject)) + 
+  geom_line() + 
+  geom_smooth(method = "lm", se = FALSE)
+
+# instead of setting the grouping aesthetic in ggplot(), where it will apply to all layers, we set it in geom_line() so it applies only to the lines
+ggplot(Oxboys, aes(age, height)) + 
+  geom_line(aes(group = Subject)) + 
+  geom_smooth(method = "lm", linewidth = 2, se = FALSE)
+#> `geom_smooth()` using formula = 'y ~ x'
+```
+
+### B.3 Overriding the default grouping
+
 
