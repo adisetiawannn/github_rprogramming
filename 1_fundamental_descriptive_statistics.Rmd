@@ -1,0 +1,173 @@
+---
+title: "Fundamental of Descriptive Statistics"
+output: html_document
+date: "2023-10-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# A. Aplikasi Permutasi dan Kombinasi pada Probabilitas
+
+* packages yang dapat digunakan untuk menghitung permutasi :
+gtools -> functions : permutations
+
+* package yang dapat digunakan untuk menampilkan semua objek hasil simulasi permutasi : combinat -> functions : permn
+
+## 1. Permutasi pada Probabilitas
+
+### a. Contoh 1 (permutation on probability):
+
+* Suatu unit kegiatan mahasiswa beranggotakan 17 orang. terdapat 3 orang yang menduduki, ketua, sekretaris dan bendahara. setiap anggota memiliki kesempatan yang sama untuk menduduki ketiga posisi tersebut.
+
+*pertanyaan : berapa probability untuk memilih 3 orang anggota secara acak dan ketiga menduduki posisi ketuam sekretaris dan bendahara ?
+
+* interpretasi dari soal tersebut :
+
+  * sample space : 17 orang
+  
+  * outcome : ? (belum diketahui)
+  
+  * urutan : diperlukan, karna tidak boleh seseorang yang sudah dipilih menduduki posisi lain (without replacement)
+  
+  * duplikasi : tidak diperbolehkan
+  
+  * summarynya : sehingga untuk menjawab soal tersebut dibutuhkan, outcome (yang dapat dicari dengan menggunakan permutasi) dan probability rule
+
+
+```{r contoh 1 : application of permutations on probability, include=FALSE}
+n <- seq(1,17,1)
+r <- c(1,2,3) # 1 : ketua, 2 : sekre dan 3 : bendahara
+
+install.packages("combinat")
+library (combinat)
+
+install.packages("gtools")
+library(gtools)
+
+# Contoh 1
+#. A dengan rumus probability
+# sample space : 17
+# probabilitya : terpilih dan tidak (classical probability)
+(1/17)*(1/16)*(1/15) # -> akan mendekati multipication rules
+#> 0.000245098
+
+# B. dengan memanfaatkan permutasi
+# 1. mencari permutations sebagai outcome
+
+nrow(permutations(n=17, r=3))
+
+# 2. karna pemilihannya cuma 1 maka probability thdp pemelihan tersebut atau 1 dimaksudkan dari permutasi (urutan susunan) manakah yang bisa terpilih
+
+1 / nrow(permutations(n=17, r=3))
+#> 0.000245098
+      
+```
+
+### b. Contoh 2 (Combination on probability)
+
+soal : berapa probability untuk mendapatkan keseluruhan diamonds pada pengambilan 5 kartu pada tumpukan playing cards ?
+
+interpretasi :
+
+* r (jumlah objek) = 5
+
+* n (jumlah kartu diamonds) = 13
+
+* n (jumlah kartu playing cards) = 52
+
+* aturan pengambilan : tidak diperlukan
+
+* replacement : without replacement
+
+* sehingga kita bisa menyelesaikan persoalan ini dengan menggunakan aturan kombinasi
+
+```{r contoh 2 : combination on probability, include=False}
+#. A dengan rumus probability
+# sample space : 52
+
+# jumlah kartu diamonds : 13
+(13/52)*(12/51)*(11/50)*(10/49)*(9/48)
+#> [1] 0.0004951981
+
+# B dengan menggunakan kombinasi dan probability
+
+# mencari total outcome nya :
+nrow(combinations(n=52, r=5))
+#> [1] 2598960
+
+# kombinasi pengambilan kartu diamondsnya
+nrow(combinations(n = 13, r = 5))
+#> 1287
+
+# probabilitasnya 
+nrow(combinations(n=13, r=5)) / nrow(combinations(n=52, r=5))
+#> 0.0004951981
+
+```
+
+### c. Contoh 3
+
+soal : dari kumpulan 400 bola tenis diketahui terdapat 3 bola yang cacat produksi, dilakukan pengambilan 4 bola acak. berapa probability mendapatkan bola yang cacat produksi
+
+interpretasi :
+
+* n objek : 400 (total bola)
+
+* n objek : 3 (bola cacat produksi)
+
+* r objek : 4 (total eksperimen/pengambilan)
+
+* without replacement
+
+* pengambilan secara acak -> artinya tidak memperhatikan urutan -> dapat diselesaikan dengan kombinasi.
+
+```{r contoh 3, include=FALSE}
+
+# Contoh 3
+#. A dengan rumus probability
+# sample space : 400
+# withhout replacement
+(1-(397/400))^4
+#> [1] 3.164062e-09
+
+# B. dengan rumus kombinasi
+
+# menghitung outcome
+nrow(combinations(n=400, r=4))
+
+# menghitung kombinasi pengambilan bola cacat produksi
+combinations(n=3, r=1)
+#> 3
+
+# menghitung kombinasi pengambiolan bola tidak cacat produksi
+nrow(combinations(n=397, r=3))
+#> 10349790
+
+# probabiltas
+# kombinasi dari pengambilan bola cacat produksi * kombinasi dari pengambilan bola tidak cacat produksi / total outcome
+
+```
+
+
+
+B. Probability dan Distribusi
+
+* R dapat digunakan untuk menghitung beberapa probability dengan berbagai macam jenis distribusinya. antara lain : distribusi binomial, poisson dan normal
+
+  * distribusi binomial : distribusi yang berisi hasil dari sebuah percobaan (ekperimen) binomial, eksperimen yang hanya memiliki 2 outcome. contohnya : pelemparan koin (tail dan head).
+  
+  * distribusi poisson : suatu distribusi untuk peristiwa yang probabilitas kejadiannya kecil, dimana kejadian tergantung pada selang waktu tertentu atau di suatu daerah tertentu dengan hasil pengamatan berupa variabel diskrit dan antar variabel prediktor saling independen. Selang waktu tersebut dapat berupa beberapa saja panjangnya, misalnya semenit, sehari , seminggu, sebulan bahkan setahun. Daerah tertentu yang dimaksudkan dapat berupa suatu garis, suatu luasan, suatu volume, atau mungkin sepotong bahan
+
+  * distribusi normal : Distribusi normal adalah salah satu jenis distribusi variabel acak kontinu, terdapat kurva berbentuk lonceng atau grafik. Distribusi ini dengan fungsi probabilitas kemudian menunjukkan variasi atau penyebaran distribusi, fungsi yang nantinya juga akan dibuktikan dengan menggunakan suatu grafik simetris atau bell curve.
+
+
+
+
+
+
+
+
+
+
