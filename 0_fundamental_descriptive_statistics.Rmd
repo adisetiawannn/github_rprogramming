@@ -134,5 +134,208 @@ tabel_dist
   
   * mode / modus : nilai yang paling sering muncul, nilai yang frekuensi kemunculannya paling banyak pada suatu dataset. suatu dataset dapat memilki lebih dari suatu modus.sebaliknya, suatu dataset juga memungkinkan tidak memiliki mode.
 
+* **mean** baik digunakan jika tidak ada outlier pada data karna dapat mewakili keterlibatan semua data pada dataset
 
+* namun jika terdapat outlier pada dataset kita dapat menggunakan **median** sebagai pengukuran nilai sentral pada dataset tersebut.
+
+* bentuk lain mean : weighted mean dan grouped mean
+
+  1. weighted mean : nilai rerata suatu dataset dimana setiap entrinya memiliki bobot tertentu.
   
+    * formula weighted Mean : $\displaystyle \frac  {\Sigma (x.w)}{\Sigma w}$
+    
+    * dimana : x = data entry , w = bobot
+  
+  kategori    |nilai (x)    |bobot (w)|weighted mean (x.w)
+  ------------|:-----------:|:-------:|:-----------------:
+  UTS         |73           | 0.25    |18.25
+  UAS         |87           | 0.20    |17.40
+  Tugas 1     |94           | 0.25    |23.50
+  Tugas 2     |72           | 0.30    |21.60
+  Total       |             | 1.00    |80.75
+  
+  2. Grouped Mean : nilai rerata dari suatu dataset yang telah dikelompokkan ke dalam format distribusi frekuensi
+  
+    * formula : Grouped Mean : $\displaystyle \frac  {\Sigma (x.f)}{\Sigma n}$
+    
+    * dimana : x = class mid point , f = frekuensi kelas dan n = jumlah data entry pada dataset.
+    
+    class mid point (x)     |frekuensi (f)  |(x.f)
+    ------------------------|:-------------:|:--------:
+    12.5                    | 6             | 75.0
+    24.5                    | 10            | 245.0 
+    36.5                    | 13            | 474.5
+    48.5                    | 8             | 388.0
+    60.5                    | 5             | 302.5
+    72.5                    | 6             | 435.0
+    84.5                    | 2             | 169.0
+    Total                   | 50            | 2089.0
+    
+  sehingga grouped mean = $\displaystyle \frac  {2089}{50}$ = 41.8 
+  
+## D.2 Bentuk-Bentuk Distribusi
+
+* bentuk distribusi secara umum ada 4 : 
+
+  1. symetric distribution / normal distribution : memiliki ciri yaitu memiliki nilai mean, median dan modus yang sama
+  
+  2. uniform distribution : memiliki ciri hanya nilai mean dan median yang sama. sehingga mempunyai kesamaan pada frekuensi datasetnya.
+  
+  3. left skewed : biasanya terjadi akibat adanya outlier pada dataset untuk mengenali bentuk distribusi ini dapat diperhatikan tail / ekor datanya berada di sebelah kiri (ekor : data menumpuk)
+  
+  4. right skewed : biasanya terjadi akibat adanya outlier pada dataset untuk mengenali bentuk distribusi ini dapat diperhatikan tail / ekor datanya berada di sebelah kanan (ekor : data menumpuk)  
+
+bentuk distribusi : 
+![](/Users/960169/Downloads/bentuk distribusi 1.png)
+
+![](/Users/960169/Downloads/bentuk distribusi 2.png)
+
+# E. Measure of Variation & Emperical Rules
+
+## E.1 Measure of Variation
+
+* definisi : measure of variation adalah suatu pengukuran yang dapat merepresentasikan keberagaman atau sebaran data.
+
+* 3 pengukuran sebaran yang umum :
+
+  1. range : perhitungan dari selisih nilai max dan nilai min pada suatu dataset. kekurangan dari pengukuran ini adalah hanya menggunakan 2 nilai saja dalam proses pengukuran
+  
+  2. variance : perhitungan dari rerata simpangan tiap entri terhadap nilai mean dataset. 
+  
+  * ada 2 jenis variance : population variance (digunakan jika menggunakan semua entri data pada dataset) dan sample variance (digunakan jika menggunakan sample dari populasi dari dataset)
+  
+  * kelemahan variance adalah satuan dari entri data tidak sama dengan satuan awalnya karna pada formulanya telah dipangkatkan dua.
+  
+  * formula :
+  
+    1. Population Variance : 
+      $\sigma^{2}$ = $\displaystyle \frac {\Sigma (x - \mu)^{2}} {N}$
+    
+    2. Population Variance : 
+    $s^{2}$ = $\displaystyle \frac {\Sigma (x - \overline{x})^{2}} {n-1}$
+    
+    * dimana : 
+      * x = nilai entri data
+      
+      * $\mu$ = mean / nilai rata-rata population
+      
+      * N = banyaknya entri data / population size
+      
+      * $\overline{x}$ = mean sample / nilai rata-rata dari sample
+      
+      * n = sample size / entri data yang dipakai pada sample
+      
+      ![](/Users/960169/Downloads/contoh variance.png)
+  * kenapa pada variance perlu dipangkatkan dua : karna jika  $\Sigma (x - \mu)$ akan memberikan nilai 0, sehingga untuk menemukan simpangannya perlu dipangkatkan 2.
+  
+  3. Standard Deviation / Simpangan Baku :
+  
+  * kelemahan variance adalah satuan entri data tidak lagi sama lagi, sehingga untuk mengatasi kelemahan tersebut diatasi dengan simpangan baku / standard deviation
+  
+  * definisi : standard deviation adalah akar kuadrat dari variance
+  
+  * notasi matematika :
+  
+    * population standard deviation :
+    $\sigma$ = $\sqrt \theta^2$ = $\sqrt {\frac {\Sigma (x - \mu)^{2}} {N}}$ 
+    
+    * sample standard deviation :
+    s = $\sqrt s^2$ = $\sqrt {\frac {\Sigma (x - \overline{x})^{2}} {n-1}}$
+      
+    ![](/Users/960169/Downloads/standar deviation contoh.png)
+    * interpretasi : mean dari dataset tersebut : 41.5 dengan standar deviasi : 3.0, artinya rata-rata gaji di perusahaan tersebut adalah 41.5 $\underline +$ 3.0 sehingga sebaran / range gaji rata-rata nya adalah 39.5 - 44.5
+  
+## E.2 Emperical Rules
+
+* Emperical rule digunakan untuk menghitung luasan dibawah kurva distribusi yang merepresentasikan persentase / sebaran distribusi data terhadap mean nya.
+
+* Emperical rule hanya dapat digunakan pada **distribusi normal** saja
+
+* adapun distribusi normal adalah distribusi yang memiliki nilai mean, median dan modus yang sama dan bentuknya mirip dengan bell shaped.
+
+* ![](/Users/960169/Desktop/Screen Shot 2023-10-12 at 10.19.16.png)
+
+* hubungan antara emperical rule dan distribusi normal adalah sebagai berikut : 
+  1. 68% data berada pada 1 standard deviasi dari mean
+  
+  2. 95% data berada pada 2 standard deviasi dari mean
+  
+  3. 99.7% data berada pada 3 standard deviasi dari mean
+  
+  4. data yang berada di 3 standard deviasi dapat dikatakan sebagai outlier
+  
+* Contoh kasus emperical rule :
+
+![](/Users/960169/Downloads/emperical rule 1.png)
+
+* Karena emperical hanya dapat digunakan untuk bentuk distribusi normal, jika kita menemui bentuk distribusi lain, untuk menentukan besaran sebaran data dapat menggunakan **Chebychev Theorm**
+
+* Chebychev Theorm :
+  
+  * Merupakan proporsi minimum dari dataset yang berada pada nilai K Standard Deviation
+  
+  * formulasi : 
+  
+    k = 1 - $\frac {1} {k^2}$
+    * k = 2 = 1 - $\frac {1} {2^2}$ = $\frac {3} {4}$ = 75% 
+    * k = 3 = 1 - $\frac {1} {3^2}$ = $\frac {8} {9}$ = 88.9%
+    
+* contoh kasus Chebychev Theorm :
+
+![](/Users/960169/Downloads/chebychec theorm 1.png)
+    
+## E.3 Standard Deviation for Grouped Data
+
+* perhitungan standard deviasi juga dapat diterapkan untuk menghitung simpangan data terhadap mean pada dataset yang telah di klasifikasikan / distribusi frekuensi.
+
+* formulasi nya :
+  
+  * sample standard deviation = s = $\sqrt s^2$ = $\sqrt {\frac {\Sigma (x - \overline{x})^{2}f} {n-1}}$
+  
+* contoh kasus :
+
+![](/Users/960169/Downloads/standard deviation for grouped data.png)
+
+## E.4 Coefficient of Variation
+
+* Coefficient of Variation : digunakan untuk membandingkan keberagaman/sebaran data antar dataset yang sama dengan nilai mean yang mirip.
+
+* untuk menghitung coefficient of variation digunakan $\mu$ atau $\overline x$ (mean) dan $\sigma$ atau $s$ (standard deviation)
+
+* dengan kata lain, coefficient of variation merupakan proporsi dari standard deviation terhadap nilai mean.
+
+* formulasi :
+
+  1. population coefficient of Variation : CV = $\frac {\sigma} {\mu}$.100%
+  
+  2. sample coefficient of variation : CV = $\frac {s} {\overline x}$.100%
+  
+* contoh kasus : 
+
+![](/Users/960169/Downloads/coefficient of variation 1.png)
+
+* interpretasi dari kasus diatas adalah weight memiliki sebaran data yang lebih luas dibandingkan dengan height
+
+# G. Measure of Position 
+
+* measure of position adalah suatu pengukuran nilai yang digunakan untuk menentukan posisi relatif dari suatu entri data pada dataset.
+
+* 3 measure of position yang umum digunakan :
+
+  1. quartile
+  
+    * definisi : nilai yang membagi dataset menjadi empat bagian yang sama :
+      
+      * Q1 : posisi data berada pada urutan ke-25% dari dataset
+      
+      * Q2 : posisi data berada pada urutan ke-50% dari dataset  -> sering juga disebut dengan **median** atau nilai tengah.
+      
+      * Q3 : posisi data berada pada urutan ke-75% dari dataset
+      
+      * Q4 : posisi data berada pada urutan ke-100% dari dataset
+      
+    * ada beberapa jenis quartile, salah satunya adalah interquartile range (IQR)
+    
+    * IQR adalah measure of variation dengan mensilisihkan kuartil ketiga dan kuartil pertama
+    
+    * Formulasi IQR : IQR = $Q_{3}$ - $Q_{1}$
