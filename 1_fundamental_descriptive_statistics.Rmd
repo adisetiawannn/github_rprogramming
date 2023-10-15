@@ -1,5 +1,6 @@
 ---
-title: "Fundamental of Descriptive Statistics"
+title: "Fundamental of Descriptive Statistics - Probability"
+author: "M Adi Setiawan"
 output: html_document
 date: "2023-10-07"
 ---
@@ -8,7 +9,56 @@ date: "2023-10-07"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# A. Aplikasi Permutasi dan Kombinasi pada Probabilitas
+# A. Pengenalan Probabilitas
+
+* Definisi : Probabilitas adalah suatu pengukuran terhadap suatu peluang / kemungkinan
+
+* ada beberapa terminologi yang harus dipahami dalam probability :
+
+  1. Sample Space : himpunan dari seluruh kemungkinan pada suatu probability eskperimen
+  
+  2. Outcome : Kemungkinan hasil dari suatu percobaan
+  
+  3. Event : bagian dari sample space. Event bisa terdiri dari satu atau lebih outcome (event merupakan subset dari sample space)
+
+* Probability Experiments adalah aksi atau percobaan (trial) yang menghasilkan suatu perhitungan, pengukuran atau respon (counts, measurments or responses)
+
+
+* Fundamental Counting Principle : merupakan cara paling praktis untuk mengetahui kemungkinan banyaknya/total outcomes pada suatu 2 percobaan atau lebih dengan cara mengalikan setiap outcome nya.
+
+* ada beberapa tiper probability :
+  
+  1. Classical / Theoritical Probability
+  
+    * biasanya digunakan jika outcome pada sample space memiliki peluang yang sama.
+    
+    * formulasinya :
+    
+    P (E) = Number of outcomes in Event E / Total Number of Outcomes in sample space
+    
+    
+    
+  
+  2. Emperical / Statistical Probability
+  
+  3. Subjective Probability
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# D. Aplikasi Permutasi dan Kombinasi pada Probabilitas
 
 * packages yang dapat digunakan untuk menghitung permutasi :
 gtools -> functions : permutations
@@ -164,6 +214,14 @@ B. Probability dan Distribusi
 
 
 
+```{r}
+x <- seq (0,6,1)
+x1 = array()
+for (i in x) {
+  print(dbinom(x = i, size = 6, prob = 0.6))
+  }
+
+```
 
 
 

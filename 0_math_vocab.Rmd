@@ -1,0 +1,108 @@
+---
+title: "Math Vocabulary"
+author: "M Adi Setiawan"
+output: html_document
+date: "2023-10-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# A
+# B
+# C
+
+  * Chebychev Theorm : proporsi minimum dataset yang berada pada nilai K standard Deviation. umumnya digunakan sebagai pendekatan untuk menghitung sebaran data yang tidak memiliki bentuk distribusi normal
+  
+  * Coefficient of Variation = CV = $\frac {\sigma} {\mu}$.100% atau $\frac {s} {\overline x}$.100% : digunakan untuk membandingkan simpangan dari 2 dataset.
+
+# D
+
+  * data value : nilai suatu data biasanya dinotasikan sebagai **x** data.
+  
+# E
+
+  * entri data = N or n : menunjukkan banyaknya jumlah populasi data dalam suatu dataset 
+  
+  * Emperical Rule : suatu metode pendekatan dalam measure of variation yang membagi luasan suatu distribusi normal / bell shaped distribution kedalam 3 area. 68% 1 standard deviation, 95% 2 standard deviation dan 99.7 3 standard deviation. biasanya digunakan untuk mengetahui luasan suatu dataset umumnya ditujukan untuk diaplikasikan dalam dataset dengan distribusi normal.
+  
+  * Event : bagian dari sample space. Event bisa terdiri dari satu atau lebih outcome (event merupakan subset dari sample space)
+
+# F
+# G
+
+  * Grouped Mean or $\overline x$ = $\displaystyle \frac  {\Sigma (x.f)}{\Sigma n}$ : nilai rata-rata dari suatu dataset yang mana dataset tersebut telah dikelompokkan dalam beberapa kelas atau diubah menjadi distribusi frekuensi. n = jumlah populasi data (entri point)
+
+# H
+# I
+
+  * Interquartile (IQR) : selisih antara kuartil ke-3 (Q3) dan kuartil-1 (Q1). biasa digunakan untuk mendeteksi outlier pada suatu dataset dengan bentuk distribusi normal. jika menggunakan IQR suatu data dapat dikatakan sebagai outlier jika berada : > Q3+1.5 IQR atau < Q1 - 1.5 IQR
+
+# J
+# K
+# L
+
+  * Left Skewed Distribution : Salah satu bentuk distribusi data yang mana histogramnya memiliki tail/ekor yang berada disebelah kiri mean dataset.
+
+# M
+
+  * Mean = $\mu$ or $\overline x$ : nilai rata-rata dari suatu dataset. biasa digunakan untuk mendeskripsikan central of tendency / nilai sentral dataset.
+  
+  * Median : merupakan nilai tengah dari suatu dataset.
+  
+  * Mode : sering disebut dengan modus. merupakan nilai dari entri point dalam dataset yang paling sering muncul
+
+# N
+# O
+
+  * Outcome : Kemungkinan hasil dari suatu percobaan
+
+# P
+
+  * Percentile =  $p_n$ = $\frac {n} {N}$ x 100% : measure of position dimana dataset dibagikan menjadi 100 bagian yang sama. (p1,p2,p3...p99). p50 = median = Q2 (kuartil ke-2). percentile ini biasa juga digunakan untuk mendeteksi outlier pada dataset dengan distribusi normal.(N = total data, n = urutan data pada pengukuran percentile)
+  
+  * Probability Experiments adalah aksi atau percobaan (trial) yang menghasilkan suatu perhitungan, pengukuran atau respon (counts, measurments or responses)
+  
+
+# Q
+
+  * Quartile : suatu pengukuran posisi entry data / measure of position dimana dataset yang telah diurutkan dibagi menjadi 3 : Q1 = 25%, Q2=50% = median, Q3 = 75%.
+
+# R
+
+  * Range : merupakan suatu measure of variaton (sebaran data) yang diperoleh dari x max - x min.
+  
+  * Right Skewed Distribution : Salah satu bentuk distribusi data yang mana histogramnya memiliki tail/ekor yang berada disebelah kanan mean dataset.
+
+# S
+
+  * Sample Space : himpunan dari seluruh kemungkinan pada suatu probability eskperimen
+
+  * Standard Deviation = $\sigma$ or $s$ : akar kuadrat dari suatu variance (rerata simpangan tiap entry point terhadap nilai mean)
+  
+  * Symetric Distribution : sering disebut juga dengan normal distribution, yaitu salah satu jenis distribusi yang memiliki nilai mean, median dan mode yang sama. umumnya histogramnya berbentu bell shaped
+  
+# T
+# U
+
+  * Uniform Distribution : suatu bentuk distribusi yang memiliki nilai mean dan median yang sama. bentuk ini juga biasanya memiliki kesamaan pada frekuensi datasetnya.
+
+# V
+  
+  * variance = $\sigma^2$ or $s^2$ : Rerata simpangan kuadrat suatu entri point (data) dalam suatu dataset terhadap nilai mean dataset tersebut.
+  
+# W
+
+  * weighted mean or $\overline x$ = $\displaystyle \frac  {\Sigma (x.w)}{\Sigma w}$ : nilai rata-rata dari suatu dataset yang mana tiap entri datanya memiliki bobot tertentu. w = bobot dari tiap kelas (entri point), umumnya $\Sigma w$ = 100%
+
+# X
+# Y
+# Z
+
+  * Z-score =  $\frac {X - \mu}{\sigma}$ : merepresentasikan nilai simpangan suatu nilai pada entry point terhadap mean yang diukur menggunakan standard deviation.  digunakan untuk : 
+      1. mendeteksi outlier (lebih ditujukan pada dataset dengan jenis distribusi normal / bell shaped)
+      
+      2. Menghitung luasan dibawah kurva -> dijelaskan lebih lanjut pada bab probabilitas
+
+

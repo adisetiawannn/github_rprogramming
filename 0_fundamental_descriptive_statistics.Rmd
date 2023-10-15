@@ -1,5 +1,5 @@
 ---
-title: "Fundamental of Statisctic Descriptive Part 1"
+title: "Fundamental of Statisctic Descriptive - Basic"
 author: "M Adi Setiawan"
 output: html_document
 date: "2023-10-09"
@@ -339,3 +339,91 @@ bentuk distribusi :
     * IQR adalah measure of variation dengan mensilisihkan kuartil ketiga dan kuartil pertama
     
     * Formulasi IQR : IQR = $Q_{3}$ - $Q_{1}$
+    
+    * kegunaan dari quartile : digunakan untuk mendeteksi outlier pada dataset. suatu entri data dapat dikatakan sebagai outlier jika :
+      
+      1. lebih kecil dari $Q_{1}$ - 1.5(IQR)
+      
+      2. lebih besar dari $Q_{3}$ + 1.5(IQR)
+      
+    * perlu diperhatikan IQR lebih ditujukan untuk mendeteksi outlier pada dataset dengan distribusi simetris / bell shaped distribution
+    
+    * contoh mendteksi outlier dengan menggunakan interkuartil / IQR :
+    ![](D:/Download from Chrome/interquartile.png)
+    
+    * Visualisasi yang umum digunakan untuk merepresentasikan pengukuran/sebaran posisi atau measure of position tipe quartile ini adalah **Box Plot**
+    
+    ![](D:/Download from Chrome/boxplot.png)
+    ![](D:/Download from Chrome/boxplot2.png)
+    
+  2. Percentile
+  
+    * definisi percentile : measure of position dimana nilai dataset dibagikan menjadi 100 bagian yang sama.
+    
+    * terdapat 99 percentile pada suatu dataset, yaitu p1,p2,p3,..... p99
+    
+    * p25 = kuartil pertama / Q1, P50 = kuartil 2 / Q2 dan P75 = kuartil ketiga / Q3
+    
+    * percentile juga dapat digunakan untuk mendeteksi outlier, jika :
+    
+      1. data point lebih kecil dari p5 (x < p5)
+      
+      2. data point lebih besar dari p95 (x < p95)
+      
+    * percentile dataset dapat dicari dengan mengurutkan dataset, lalu formulasinya :
+    
+    $p_n$ = $\frac {n} {N}$ x 100%
+    * dimana :
+      N = total data, n = urutan data pada pengukuran percentile
+      
+    * contoh pengukuran percentile dataset :
+    
+    ![](D:/Download from Chrome/percentile.png)
+    
+  3. Standard-Score (Z-score)
+  
+  * Definisi Z-Score : merepresentasikan nilai simpangan suatu entri data (data point) terhadap mean dari dataset yang diukur berdasarkan standard deviation
+  
+  * nilai Z-Score dapat :
+  
+    * negatif : data point berada disebelah kiri dari mean
+    
+    * positif : data point berada disebelah kanan dari mean
+    
+    * nol : data point tepat berada pada mean
+    
+  * formula Z-score = $\frac {X - \mu}{\sigma}$   
+  
+    * dimana :  
+      
+      * x = nilai entri data
+      
+      * $\mu$ = mean / nilai rata-rata population
+      
+      * $\sigma$ = standard deviation
+      
+  * kegunaan Z-Score adalah :
+    
+    1. mendeteksi outlier (lebih ditujukan pada dataset dengan jenis distribusi normal / bell shaped)
+    
+    2. Menghitung luasan dibawah kurva -> dijelaskan lebih lanjut pada bab probabilitas
+    
+    
+  * Representasi sebaran data Z-Score untuk mendeteksi outlier :
+  
+   * 95% data point pada dataset akan berada di dalam z-score 2 (selaras dengan emperical rule)
+   
+   * 5% data point akan berada diluar jangakuan z-score 2. sehingga hal ini dapat dikatakan sebagai outlier. sering disebut dengan unsual scores.
+      
+  ![](D:/Download from Chrome/z-score.png)
+ 
+ * Contoh perhitungan Z-Score untuk mendeteksi outlier : 
+ 
+  ![](D:/Download from Chrome/z-score2.png)
+  
+      
+      
+    
+      
+    
+    
