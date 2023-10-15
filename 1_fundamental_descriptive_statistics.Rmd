@@ -36,38 +36,163 @@ knitr::opts_chunk$set(echo = TRUE)
     
     P (E) = Number of outcomes in Event E / Total Number of Outcomes in sample space
     
-    
-    
+```{r classical probability, include=FALSE}
+# Contoh 1 : pelemparan sebuah dadu 6 sisi dan mendapatkan angka 3
+
+PA <- round(1/6, digits = 3) 
+PA
+
+# Contoh 2 : pelemparan sebuah dadu 6 sisi dan mendapatkan angka lebih kecil dari 5 : sehingga outcomes yang bisa didapat adalah {1,2,3,4}
+
+PB <- round(4/6,digits = 3)
+PB
+
+```
   
   2. Emperical / Statistical Probability
   
+    * didasarkan pada observasi probability experiments
+    
+    * formula :
+    
+    P (E) = frequency of event E / Total Frequency
+    
+```{r emperical probability, include=FALSE}
+
+# Contoh 1 : dari suatu survey seberapa sering menggunakan produk recycle yang diikuti 2.451 responden dan diperoleh data sebagai berikut : always : 1054, often : 615, sometime : 417, rarely : 196, never : 171. berapakah probability untuk orang selanjutnya yang akan memberikan response always ?
+
+P_always <- round(1054 / 2451, digits = 3)
+P_always
+
+```
+    * Law of Large Number :
+    
+      * jika suatu probability experiment dilakukan secara berulang dalam jumlah yang besar, maka nilai emperical probability yang dihasilkan akan semakin mendekati nilai classical probability dari event terkait.
+  
   3. Subjective Probability
+  
+  * didasarkan pada intuisi, educated guesses dan estimasi
+  
+* Range of Probability : probability suatu event akan memiliki range / jangkauan antara 0 dan 1. jika suatu event memiliki probability < 0.05 maka event tersebut dapat dikatakan sebagai unsual event.
+
+* Complementary Events : semua outcomes pada sample space yang tidak disertakan pada event E / P(E)
+
+* Complement dari event E dinotasikan sebagai : P'(E)
+
+* formulasi complement P(A) : P'(A) = 1 - P (A) 
 
 
+# B. Conditional Probabilty dan Multiplication Rules
+
+  ## 1. Conditional Prbability 
+  
+  * Definisi : Conditional probabilty adalah suatu probabilitas kemunculan suatu event jika event lainnya sudah muncul atau terjadi.
+  
+  * notasi matematika : P (B|A) : probabilitas event B jika even A telah muncul : Probability of B given A
+  
+```{r conditional probability, include=FALSE}
+# Contoh 1 : dua buah kartu diambil secara acak berurutan dari setumpuk playing card (terdiri dari 52 kartu). berapa probability terambilnya kartu queen jika pengambilan pertama adalah kartu king. asumsikan experiment ini adalah without replacement ?
+
+P_B_A <- round(4/51, digits = 3)
+P_B_A
+
+```
+
+  ## 2. Independent & Dependent Event
+
+  * Independent : Dua events independent bila kemunculan dari event yang satu tidak mempengaruhi probability kemunculan event lain. notasi : P(B|A) = P (B) atau P(A|B) = P (A)
+  
+  * Dependent Event : Event yang tidak independent atau kemunculan dari satu event mempengaruhi probability event lain. 
+  
+  ## 3. Multiplication Rules 
+  
+  * Untuk mencari probability dari 2 event yang muncul berurutan dapat memanfaatkan multiplication rule
+  
+  * formula dependent event : P (A and B) : P(A) * P(B|A)
+  
+  * formula independent event : P (A and B) : P(A) * P(B)
+  
+# C. Addition Rule 
+
+* Addition Rule pada probabilitas digunakan jika 2 event dapat muncul atau tidak dalam waktu yang bersamaan.
+
+* ada 2 kategori mutually exclusive events :
+  
+  1. Mutually Exclusive Events : suatu event yang tidak dapat muncul dalam waktu yang bersamaan. sehingga P (A and B) = 0
+  
+  2. Not Mutually Exclusive Events : suatu event yang dapat muncul dalam waktu yang bersamaan. sehingga P (A and B) <> 0
+
+* Addtion Rule sangat berhubungan dan bergantung pada jenis mutually antara 2 events.
+
+  * Addition rule untuk Mutually Exclusive Events : P (A or B) = P(A) + P(B)
+  
+  * Addition rule untuk Not Mutually Exclusive Events : P (A or B) = P(A) + P(B) - P(A and B)
+
+# D. Permutasi dan Kombinasi serta Aplikasinya pada Probabilitas
+
+## D.1 Permutasi
+
+* Permutasi (Permutations) :
+
+  * definisi : banyaknya cara/urutan penyusunan sejumlah objek r yang diambil dari objek n unik. yang perlu diingat permutasi memperhitungkan aturan dari urutan.
+  
+  * Notasi : $_nP_r$ = $\displaystyle \frac {n!} {(n-r)!} $, dengan r <= n
+  
+  * permutasi dengan duplikasi : dimungkinkan juga suatu penyusunan urutan memiliki duplikasi sehingga formulasinya : $_nP$ = $\displaystyle \frac {\Sigma n!} {(n_a!^*n_b!^*n_c!....}$
+  
+  * pada r-programming : untuk menghitung permutasi tanpa duplikasi dapat menggunakan package gtools::permutations dan permutasi dengan duplikasi dapat menggunakan package RcppAlgos::permuteGeneral
+  
+```{r permutasi, include=FALSE}
+
+# contoh permutasi unik : empat puluh orang dalam suatu kelas mengikuti lomba matematika, berapa banyak kemungkinan posisi juara 1,2,3 yang dapat terbentuk ?
+
+library(gtools)
+n_permutasi <- nrow(permutations(n=43,r=3))
+n_permutasi
+
+# contoh permutasi dengan duplicate : berapa banyak cara untuk melakukan pengurutan pada sekumpulan huruf berikut : AAAABBC
+
+install.packages("RcppAlgos")
+library (RcppAlgos)
+
+x <- c ("A","A","A","A","B","B","C")
+tab_x <- table(x)
+
+dup_permutate <- nrow(permuteGeneral(v=names(tab_x), m=length(x), repetition = T, freqs =tab_x ))
+
+dup_permutate
+
+```
 
 
+## D.2 Kombinasi (Combinations)
 
+* Kombinasi adalah Pemilihan sejumlah r objek dari n objek yang tidak perlu/tanpa memperhatikan urutan
 
+* formulasinya : $_nC_r$ = $\displaystyle \frac {n!} {(n-r)!^*r!} $, dengan r <= n
+  
+```{r combinations, include = FALSE}
 
+# contoh 1 : pemerintah kota ingin membuat 5 taman : TAMAN A,B,C,D,E. tetapi hanya memiliki budget untuk membangun 3 taman saja. hitunglah opsi 3 taman yang pertama dibangun ?
 
+comb <- nrow(combinations(n = 5, r = 3))
 
+comb
 
+```
 
+## D.3. Aplikasi Permutasi dan Kombinasi pada Probabilitas
 
+* aplikasi permutasi dan kombinasi pada probabilitas : menghitung kemungkinan semua outcomes pada sample space.
 
-
-
-
-# D. Aplikasi Permutasi dan Kombinasi pada Probabilitas
+### D.3.1 Permutasi dan Probabilitas
 
 * packages yang dapat digunakan untuk menghitung permutasi :
 gtools -> functions : permutations
 
 * package yang dapat digunakan untuk menampilkan semua objek hasil simulasi permutasi : combinat -> functions : permn
 
-## 1. Permutasi pada Probabilitas
-
-### a. Contoh 1 (permutation on probability):
+#### a. Contoh 1 (permutation on probability):
 
 * Suatu unit kegiatan mahasiswa beranggotakan 17 orang. terdapat 3 orang yang menduduki, ketua, sekretaris dan bendahara. setiap anggota memiliki kesempatan yang sama untuk menduduki ketiga posisi tersebut.
 
@@ -115,7 +240,7 @@ nrow(permutations(n=17, r=3))
       
 ```
 
-### b. Contoh 2 (Combination on probability)
+### D.3.1 Kombinasi dan Probabilitas
 
 soal : berapa probability untuk mendapatkan keseluruhan diamonds pada pengambilan 5 kartu pada tumpukan playing cards ?
 

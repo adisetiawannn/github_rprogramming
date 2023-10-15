@@ -16,6 +16,12 @@ knitr::opts_chunk$set(echo = TRUE)
   * Chebychev Theorm : proporsi minimum dataset yang berada pada nilai K standard Deviation. umumnya digunakan sebagai pendekatan untuk menghitung sebaran data yang tidak memiliki bentuk distribusi normal
   
   * Coefficient of Variation = CV = $\frac {\sigma} {\mu}$.100% atau $\frac {s} {\overline x}$.100% : digunakan untuk membandingkan simpangan dari 2 dataset.
+  
+  * Combination (Kombinasi) : Kombinasi adalah Pemilihan sejumlah r objek dari n objek yang tidak perlu/tanpa memperhatikan urutan. formulasinya : $_nC_r$ = $\displaystyle \frac {n!} {(n-r)!^*r!} $, dengan r <= n
+  
+  * Complementary Events : semua outcomes pada sample space yang tidak disertakan pada event E / P(E). formula => P'(E) = 1 - P(E) 
+  
+  * Conditional Prbability : P (B|A) : Probability of B given A : Probabilitas event B jika event A terjadi.
 
 # D
 
@@ -52,8 +58,15 @@ knitr::opts_chunk$set(echo = TRUE)
   * Median : merupakan nilai tengah dari suatu dataset.
   
   * Mode : sering disebut dengan modus. merupakan nilai dari entri point dalam dataset yang paling sering muncul
+  
+  * Multiplication Rules : digunakan untuk mencari probabilitas event yang muncul secara berurutan
+  
+  * Mutually Exclusive Events : suatu event yang tidak dapat muncul dalam waktu yang bersamaan
 
 # N
+
+  * Not Mutually Exclusive Events : suatu event yang dapat muncul dalam waktu yang bersamaan
+
 # O
 
   * Outcome : Kemungkinan hasil dari suatu percobaan
@@ -61,6 +74,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # P
 
   * Percentile =  $p_n$ = $\frac {n} {N}$ x 100% : measure of position dimana dataset dibagikan menjadi 100 bagian yang sama. (p1,p2,p3...p99). p50 = median = Q2 (kuartil ke-2). percentile ini biasa juga digunakan untuk mendeteksi outlier pada dataset dengan distribusi normal.(N = total data, n = urutan data pada pengukuran percentile)
+  
+  * Permutation / Permutasi : banyaknya cara/urutan penyusunan sejumlah objek r yang diambil dari objek n unik. yang perlu diingat permutasi memperhitungkan aturan dari urutan. formula : $_nP_r$ = $\displaystyle \frac {n!} {(n-r)!} $, dengan r <= n
   
   * Probability Experiments adalah aksi atau percobaan (trial) yang menghasilkan suatu perhitungan, pengukuran atau respon (counts, measurments or responses)
   
