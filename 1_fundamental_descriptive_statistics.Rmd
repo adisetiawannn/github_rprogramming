@@ -240,7 +240,9 @@ nrow(permutations(n=17, r=3))
       
 ```
 
-### D.3.1 Kombinasi dan Probabilitas
+### D.3.2 Kombinasi dan Probabilitas
+
+#### a. Contoh 1 (Combination on Probability)
 
 soal : berapa probability untuk mendapatkan keseluruhan diamonds pada pengambilan 5 kartu pada tumpukan playing cards ?
 
@@ -282,9 +284,9 @@ nrow(combinations(n=13, r=5)) / nrow(combinations(n=52, r=5))
 
 ```
 
-### c. Contoh 3
+#### b. Contoh 2 (Combination on Probability)
 
-soal : dari kumpulan 400 bola tenis diketahui terdapat 3 bola yang cacat produksi, dilakukan pengambilan 4 bola acak. berapa probability mendapatkan bola yang cacat produksi
+soal : dari kumpulan 400 bola tenis diketahui terdapat 3 bola yang cacat produksi, dilakukan pengambilan 4 bola acak. berapa probability mendapatkan satu bola yang cacat produksi
 
 interpretasi :
 
@@ -325,9 +327,162 @@ nrow(combinations(n=397, r=3))
 
 ```
 
+# E. Distribusi Probabilitas
+
+* definisi : daftar seluruh kemungkinan hasil dari suatu percobaan yang disertai dengan peluang atau probabilitas masing-masing hasil.
+
+* Sehingga distribusi hanya menggambarkan apa yang mungkin terjadi dan bukan yang sebenarnya terjadi 
+
+* seringkali ditampilkan dalam bentuk grafik, tabel, atau rumus. Tabel yang berisikan peluang dari setiap kemungkinan hasil suatu percobaan, disebut dengan tabel distribusi probabilitas atau tabel distribusi peluang.
+
+* Jika kemungkinan hasil dari suatu percobaan berupa variabel acak diskrit maka jenis distribusinya adalah distribusi probabilitas diskrit. Sedangkan jika kemungkinan hasil dari suatu percobaan merupakan variabel acak kontinu maka jenis distribusinya adalah distribusi probabilitas kontinu.
+
+* hal-hal yang perlu diperhatikan pada distribusi probabilitas :
+
+  1. Random Variables
+  
+  * Definisi : merepresentasikan suatu nilai numerik yang berasosiasi dengan setiap outcome dari suatu probability experiments
+  
+  * kata random memiliki arti bahwa nilai / x ditentukan secara kebetulan (by chance) atau dengan sengaja. misalnya : 1 : sangat jarang, 2 : jarang, 3 : biasa saja, 4 : sering, 5 : sering sekali
+
+  * terdapat 2 jenis random variables :
+    
+    1. Discrete Random Variables : suatu kemungkinan outcomes dapat dihitung (countable) dan memiliki batasan (finite). biasanya berasosiasi dengan tipe data integer (tidak ada nilai negatif). contohnya : random variables x merepresentasikan jumlah wisudawan dari suatu universitas (note : jumlah wisudawan tidak bisa memiliki nilai dibawah 0 dan bentuknya tidak bisa pecahan)
+    
+    2. Continous Random Variables : suatu kemungkinan outcomes yang tidak dapat dihitung (uncountable) dan tidak memiliki batasan (infinite), umumnya direpresentasikan dengan nilai interval. biasanya berasoiasi dengan tipe data interval (pecahan). Contohnya : Random Variables merepresentasikan volume minyak goreng yang ditampung dalam sebuah tangki berkapasitas 150 liter.
+    
+## E.1 Discrete Probability Distributions
+
+* daftar seluruh kemungkinan / probabilitas dari suatu percobaan yang memenuhi syarat : 0 <= P(x) <= 1 dan $\displaystyle \Sigma P(x) = 1$ 
+
+* Setiap discrete probability distributions harus memenuhi : 
+  
+  1. 0 <= P(x) <= 1
+  
+  2. $\displaystyle \Sigma P(x) = 1$ 
+  
+* Langkah-langkah membuat discrete probability distributions :
+
+  1. buat frequency distributions untuk seluruh outcome
+  
+  2. hitung total jumlah kemunculan (sum of frequencies)
+  
+  3. hitung probability untuk setiap outcome
+  
+  4. pastikan kedua syarat discrete probability distributions terpenuhi
+  
+```{r discrete probability distributions, include=FALSE}
+
+# contoh kasus :
+
+# Dilakukan pendataan tingkat kepuasan pelanggan untuk suatu mini market menggunakan liker scale dengan rentang mulai dari 1 (sangat tidak puas) sampai dengan 5 (sangat puas). dari frequency distribution yang terbentuk, buatlah discrete probability distributionnya
+
+# langkah-langkah membuat discrete probability distribution :
+
+# 1. membuat tabel distribusi frekuensi & # 2. menghitung total jumlah kemunculan (sum of frequencies)
+x <- c(1:5)
+fx <- c(24,33,42,30,21)
+
+dist_frek <- data.frame (x = x,
+                         f = fx)
+
+# 3. Hitung semua probabilitasnya
+
+dist_frek_2 <- data.frame(x=dist_frek$x,
+                          f = dist_frek$f,
+                          px = dist_frek$f/sum(fx) )
+
+# 4. pastikan kedua syarat discrete probablity distributions terpenuhi
+
+library(ggplot2)
+
+# histogram 1
+ggplot(data = dist_frek_2, mapping = aes(x=x,y=px)) + 
+geom_bar(stat="identity") + xlab("score") + ylab ("probability")
+
+# histogram 2 (alternative)
+
+```
+
+* Mean pada discrete random variables
+
+* digunakan untuk menghitung central tendency pada discrete variable. 
+
+* formula : $\mu = \Sigma x.P(x)$
+
+```{r mean untuk discrete random variable, include=FALSE}
+
+dist_frek_2$mean <- dist_frek_2$x * dist_frek_2$px
+dist_frek_2
+#meannya adalah total penjumlahan
+
+sum(dist_frek_2$mean)
+#> [1] 2.94
+#> interpretasinya : hasil survey menujukkan kecendrungan memberikan nilai 3 (normal/biasa saja) yang dapat diartikan bahwa pelanggan merasa bahwa pelayanan pada supermarket tersebut cukup standar.
+```
+    
+* Standard deviation pada discrete probability distributions
+
+* nilai variance dan standard deviation pada discrete probability distributions dapat diformulasikan sebagai berikut :
+
+  * variance = $\sigma^{2} = \Sigma (x-\mu)^{2}.P(x)$
+  
+  * standard deviation = $\sqrt \sigma^2$ = $\sqrt \Sigma(x-\mu)^2P(x)$
+
+```{r variance & standard deviation pada discrete probabilty distribution, include=FALSE}
+
+dist_frek_2$x_miu <-  (dist_frek_2$x-sum(dist_frek_2$mean))^2
+dist_frek_2
+
+dist_frek_2$standard_deviation <- dist_frek_2$x_miu*dist_frek_2$px
+
+#standard deviation
+(sum(dist_frek_2$standard_deviation))^0.5
+#> [1] 1.271377
+#> interpretasi : hasil survey tersebut memiliki kecendrungan pelanggan memberikan nilai survey dengan simpangan 1.271377 (kanan-kiri) dari nilai rata2.
+
+```
+
+* Expected Value
+
+* definisi : nilai mean dari suatu random variabel yang merepresentasikan apa yang bisa kita harapkan untuk diperoleh dari ribuan kali percobaan (trials)
+
+* nilai probability tidak mungkin negatif, tetapi nilai mean random discrete variable mungkin saja negatif
+
+* dibanyak kasus, nilai expected value 0 dapat memiliki makna :
+  
+  * untuk kasus permainan : fair game
+  
+  * untuk kasus profit and loss : break event point
+  
+```{r expected value, include=FALSE}
+
+# soal : dalam suatu undian berhadiah, terjual sebanyak 1500 tiket. harga untuk tiap tiket $2 dan tersedia empat hadiah untuk undian ticket : $498, $248, $148 dan $73. jika kita membeli satu buah tiket. berapa expected value untuk memenangkan undian (gain) ?
+
+# diketahui : sample size = 1500
+gain <- c(498,248,148,73,-2) #-2 : harga kita membeli tiket
+
+prob_gain <- c(1/1500, 1/1500,1/1500,1/1500,(1500-4)/1500)
+
+tbl_dist <- data.frame(gain = gain, prob = prob_gain)
+tbl_dist
+
+# untuk menentukan expected value kita hanya perlu menghitung mean dari tabel distribusi probability tersebut
+
+weighted.mean(x =tbl_dist$gain, w = tbl_dist$prob)
+#> [1] -1.35 
+#> interpretasi : untuk tiap undian maka kita akan lebih sering mendapatkan kekalahan. karna dari 1500 percobaan dengan total hadiah seperti diatas, kita akan kalah $-1.35
 
 
-B. Probability dan Distribusi
+```
+
+## E.2 Pendalaman Discrete probability Distribution
+
+
+
+
+
+#EEEE. Probability dan Distribusi
 
 * R dapat digunakan untuk menghitung beberapa probability dengan berbagai macam jenis distribusinya. antara lain : distribusi binomial, poisson dan normal
 
