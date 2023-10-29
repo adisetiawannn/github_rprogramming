@@ -476,33 +476,234 @@ weighted.mean(x =tbl_dist$gain, w = tbl_dist$prob)
 
 ```
 
-## E.2 Pendalaman Discrete probability Distribution
+## E.2 Continous Probability Distribution
 
+* Definisi :daftar seluruh kemungkinan / probabilitas dari suatu percobaan yang mana random variabelnya bukan berbentuk discrete (bilangan bulat) dan biasanya dalam bentuk range ataupun bilangan pecahan.
 
+* untuk merepresentasikan distribusi probabilitasnya digunakankanlah fungsi kepada probabilitas (probability density function)
 
+* plot untuk fungsi tersebut disebut dengan kurva probabilitas. dan nilai probabilitasnya dinyatakan sebagai luas suatu kurva yang bernilai positif.
 
+* probability density / luasan kurva pada range berada pada nilai : min = 0 dan max = 1 
 
-#EEEE. Probability dan Distribusi
-
-* R dapat digunakan untuk menghitung beberapa probability dengan berbagai macam jenis distribusinya. antara lain : distribusi binomial, poisson dan normal
-
-  * distribusi binomial : distribusi yang berisi hasil dari sebuah percobaan (ekperimen) binomial, eksperimen yang hanya memiliki 2 outcome. contohnya : pelemparan koin (tail dan head).
+* note : 
   
-  * distribusi poisson : suatu distribusi untuk peristiwa yang probabilitas kejadiannya kecil, dimana kejadian tergantung pada selang waktu tertentu atau di suatu daerah tertentu dengan hasil pengamatan berupa variabel diskrit dan antar variabel prediktor saling independen. Selang waktu tersebut dapat berupa beberapa saja panjangnya, misalnya semenit, sehari , seminggu, sebulan bahkan setahun. Daerah tertentu yang dimaksudkan dapat berupa suatu garis, suatu luasan, suatu volume, atau mungkin sepotong bahan
+  * pada distribusi kontinyu : nilai random x haruslah berbentuk range. a<x<b (nilai x berada pada a dan b) sehingga P(x) = luasan kurva a dan b
 
-  * distribusi normal : Distribusi normal adalah salah satu jenis distribusi variabel acak kontinu, terdapat kurva berbentuk lonceng atau grafik. Distribusi ini dengan fungsi probabilitas kemudian menunjukkan variasi atau penyebaran distribusi, fungsi yang nantinya juga akan dibuktikan dengan menggunakan suatu grafik simetris atau bell curve.
+  * jika, kita memiliki nilai random variabel tidak berbentuk range, misal x = b (nilai x = b / tidak berbentuk range). maka nilai probabilitas x / P(x) = 0
+  
+### E.2.1 Jenis continous probability distribution :
+
+#### E.2.1.a Uniform Distribution / Distribusi Seragam
+    
+* unifrom distribution memiliki f(x) yang seragam pada random variabel x di range a dan b
+
+* ciri-cirinya :
+
+  * Nilai Y / f(x) seragam untuk semua random variable x
+  
+  * Random variable x pada range a dan b memiliki probabilitas yang sama
+  
+  * formula yang digunakan jika bertemu dengan uniform distribution :
+  
+  * f(x)/P(x) = $\displaystyle \frac {1}{a-b}$
+  
+  * mean / $\mu$ = $\frac {a+b} {2}$
+  
+  * variansi / $\sigma ^2$ = $\frac {b-a}^2{12}$
+
+```{r contoh uniform distribution, include = FALSE}
+
+# contoh soal : sebuah mesin roll menghasilkan lembaran baja dengan ketebalan berkisar antara 150 < y < 200. tentukan fungsi distribusi peluang, rata-rata dan variansi dari ketebalan baja, jika dianggap menganut distribusi seragam
 
 
+a = 150
+b = 200
 
-```{r}
-x <- seq (0,6,1)
-x1 = array()
-for (i in x) {
-  print(dbinom(x = i, size = 6, prob = 0.6))
-  }
+#fungsi distribusi probabilitas
+fx <- round(1 / (b-a),2)
+fx
+
+#mean/rata-ratanya
+mu = round(x = (a+b)/2, digits = 2)
+mu
+
+# variansinya 
+variansi <- round(((b-a)^2)/12,2)
+variansi
+
+# standar deviasinya
+sd <- sqrt(variansi)
+sd
 
 ```
 
+#### E.2.1.b Normal Distribution / Distribusi Normal
+
+* disebut juga dengan gaussian distribution
+
+* jenis ini merupakan yang paling banyak digunakan
+
+* definisinya : distribusi kontinu yang mensyaratkan variabel diukur harus kontinyu. misalnya : tinggi badan, berat badan, skor IQ, jumlah curah hujan, volume botol, nilai ujian dll
+
+```{r normal distribution, include=FALSE}
+n = 100
+mean(n)
+# normal distribution
+
+rnorm(n=n,mean =50 )
+hist(rnorm(n=n,mean =50 ))
+```
+
+* ciri-ciri distribusi normal :
+
+  1. kurva berbentuk lengkung yang halus dan menyerupai lonceng
+  
+  2. kedua ekor / ujung kurva semakin mendekati sumbu absisnya tetapi tidak pernah memotong.
+  
+  3. distribusi normal memiliki 2 paramater penting ; mean \ $\mu$ dan standard deviasi / $\sigma$
+  
+  4. titik tertinggi kurva normal berada di nilai mean
+  
+  5. distribusi normal adalah distribusi yang simetris
+  
+  6. simpangan baku (standar deviasi) menentukan lebar kurva, semakin kecil standard deviasi maka bentuk kurva semakin runcing.
+  
+  7. total luas area dibawah kurva = 1
+  
+  8. jika jarak masing-masing nilai X kurva dihitung beradasarkan standard deviasi ($/sigma$), maka kira-kira 68% berjarak 1$\sigma$, 95% berjarak 2$\sigma$ dan 99% berjarak 3$\sigma$
+
+* distribusi normal sangat bergantung pada nilai mean dan standard deviation. bila kedua nilai ini diketahui. maka kita dapat menggambarkan kurva normal tersebut dengan pasti.
+
+* dikarenakan kurva normal sangat bergantung pada nilai mean dan standard deviation : maka untuk mentransformasikan hasil pengamatan yang berasal dari sembarang variabel acak normal x menjadi variabel normal z dengan miu = 0 dan standard deviation digunakanlah z-score
+
+* z-score : z = $\displaystyle \frac {x-\mu}{\sigma}$
+
+* z-score : angka yang menunjukkan penyimpangan suatu variabel acak X dari mean ($\mu$) dihitung dalam satuan standar deviasi ($\sigma$)
+
+* kegunaan z-score : untuk mengetahui luas dibawah lengkungan kurva normal standard.
+
+```{r z-score, include=FALSE}
+# contoh soal :
+# misalkan dimiliki kurva normal dengan miu = 100 dan sd = 20. hitunglah :
+
+#a. luas kurva normal antara 100 - 125 atau P(100 < x < 125)
+
+# penyelesaian a.
+miu = 100
+sd = 20
+
+z_score_a <- round((100-miu)/sd,2)
+z_score_a
+
+z_score_b <- round((125-miu)/sd,2)
+z_score_b
+
+luasan_kurva <- z_score_b-z_score_a
+luasan_kurva
+
+# cara membuat kurva distribusi normal
+curve(dnorm(x,mean = 0, sd=1),xlim=c(-3,3))
+
+# menghitung luasan kurva z score
+pnorm(q = 125 ,mean = 100, sd=20)- pnorm(q = 100 ,mean = 100, sd=20)
+
+# contoh soal 2 :
+# misalnya seorang sarjana teknik mesin menyelidiki hasil panenan padi untuk merancang sebuah mesin perontok padi. dari 300 orang petani di suatu daerah diketahui hasil panenan rata-rata 50 kwintal dengan deviasi standar sebesar 10 kwintal. peneliti tersebut mengecek distribusi hasil panenan dan dinyatakan memiliki distribusi normal. tentukan probabilitas hasil panenan berkisar antara 40 sampai 65 kwintal ?
+
+
+n_padi <- 300
+miu_padi <- 50
+sd_padi <- 10
+
+a_padi <- 40
+b_padi <- 65
+
+# karna diketahui bahwa distribusi padi tersebut adalah distribusi normal. maka probabilitas dapat dicari dengan menggunakan z-score / luasan kurva atau jika dengan dapat menggunakan fungsi : pnorm
+
+
+prob_a_padi <- pnorm(q = a_padi, mean = miu_padi, sd = sd_padi) 
+prob_b_padi <- pnorm(q = b_padi, mean = miu_padi, sd = sd_padi) 
+
+prob_a_b_padi <- prob_b_padi - prob_a_padi
+prob_a_b_padi
+#> [1] 0.7745375
+
+```
+
+#### E.2.1.c Exponential Distribution / Distribusi Eksponensial
+
+* bentuk umum distribusi eksponensial :
+![](/Users/960169/Library/CloudStorage/OneDrive-PT.TelekomunikasiIndonesia/DATA SCIENCE/STATISTICS/1.exponential_distribution.png)
+* perlu diingat bahwa, luasan dibawa kurva / probabilitas pada exponensial distribution = 1
+
+
+* proses poisson : Proses Poisson adalah himpunan banyaknya kejadian yang terjadi pada interval waktu (0,t] yang memenuhi sifat stationary increment, independent increment, dan orderliness
+
+* jika suatu peristiwa terjadi dalam konteks proses poisson, maka panjangnya waktu atau ruang antar 2 peristiwa yang berurutan mengikuti distribusi probabilitas kontinyu
+
+* karna waktu atau ruang bersifat kontinyu, sehingga pengukuran seperti itu menghasilkan variable random kontinu.
+
+* distribusi eksponensial sering disebut dengan distribusi waktu. peristiwanya sangat erat dengan peristiwa pada distribusi poisson.
+
+* misal : suatu antrian kapal yang berlabuh disuatu dermaga, jumlah kedatangan kapal mengikuti distribusi poisson. sedangkan waktu antara kedatangan kapal mengikuti distribusi eksponensial
+
+* formulasi :
+
+  1. fungsi kerapatan eksponensial / f(x) / nilai Y / f($T_1$) =  $\lambda e^{-\lambda t}$
+  
+  dimana : 
+  
+  * $T_1$ adalah waktu kejadian pertama dalam proses poisson, dan disebut waktu ulang atau waktu antara 2 kejadian berurutan, kearena kejadian sukses independen dari waktu ke waktu
+  
+  * $\lambda$ adalah rata-rata jumlah kejadian dalam setiap unit ukuran
+  
+  * rata-rata $T_1$ : $\displaystyle \mu (T_1) = \frac {1}{\lambda}$
+  
+  * Fungsi distribusi $T_1$ dapat dicari dengan menggunakan persamaan :
+  
+  * f($T_1$) = P($T_1\underline<t$) = $1-e^{-\lambda t}$
+  
+  dimana : $X_t$ dalam distribusi poisson berarti jumlah kejadian sukses dalam interval t, sementara $T$ menyatakan waktu sampai terjadinya kejadian sukses. (sehingga rumus diatas hanya berlaku jika : $T_1\underline<t$)
+  
+  
+  * jika $T_1 > t$ artinya tidak ada kerjadian sukses dalam waktu tersebut.
+  
+  jika f($T_1$) = P($T_1\underline>t$) = P($X_t = 0$) = $e^{-\lambda t}$
+
+* e adalah bilangan euler : 2.718281828
+```{r exponential distribution, include=FALSE}
+
+#studi kasus : dari arsip mengenai gempa disuatu tempat selama periode tahun 1836-1961. diketahui terjadi 16 gempa yang berskala intensitas V1 atau lebih. jika gempa intensistas tinggi tersebut diasumsikan mengikuti distribusi poisson. tentukanlah : a. berapa peluang bahwa gempa setinggi ini akan terjadi lagi 2 tahun mendatang. b. berapa peluang tidak akan terjadi gempa dengan intensitas setinggi ini dalam 10 tahun mendatang
+
+# dapat diketahui bawah lamda / rata-rata kejadian persatuan waktu adalah :
+e <- 2.718281828
+lamda <- 16/(1961-1836)
+lamda
+#a. peluang bahwa gempa akan terjadi 2 tahun mendatang ?
+# t = 2
+t=2
+prob_gempa_2_tahun <- 1-e^(-lamda*t)
+prob_gempa_2_tahun
+#> 0.225858
+
+# penyelesaian case a dengan fungsi di R program
+
+pexp(q = t, rate = lamda )
+#> [1] 0.225858
+
+
+#b. peluang tidak terjadinya gempa 10 tahun mendatang (tidak ada kejadian sukses)
+t_1=10
+prob_tidak_gempa_10_tahun <- e^(-lamda*t_1)
+prob_tidak_gempa_10_tahun
+#> 0.2780373
+
+# penyelesaian case b dengan fungsi di R program
+
+pexp(q = t_1, rate = lamda, lower.tail = FALSE)
+#> [1] 0.2780373
+```
 
 
 
