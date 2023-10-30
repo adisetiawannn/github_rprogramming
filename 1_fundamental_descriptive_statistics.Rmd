@@ -98,13 +98,13 @@ P_B_A
 
 ```
 
-  ## 2. Independent & Dependent Event
+## B.2. Independent & Dependent Event
 
   * Independent : Dua events independent bila kemunculan dari event yang satu tidak mempengaruhi probability kemunculan event lain. notasi : P(B|A) = P (B) atau P(A|B) = P (A)
   
   * Dependent Event : Event yang tidak independent atau kemunculan dari satu event mempengaruhi probability event lain. 
   
-  ## 3. Multiplication Rules 
+## B.3. Multiplication Rules 
   
   * Untuk mencari probability dari 2 event yang muncul berurutan dapat memanfaatkan multiplication rule
   
@@ -704,6 +704,149 @@ prob_tidak_gempa_10_tahun
 pexp(q = t_1, rate = lamda, lower.tail = FALSE)
 #> [1] 0.2780373
 ```
+
+# F. Distribusi Binomial
+
+## F.1 Binomial Experiments
+
+* Binomial experiments adalah suatu probability experiment yang memenuhi kriteria berikut : 
+  
+  1. memiliki jumlah percobaan (trials) yang tetap dan setiap trial independent terhadap trials lainnya.
+  
+  2. setiap trial hanya memiliki 2 kemungkinan outcomes : Success (S) dan Failure (F)
+  
+  3. memiliki nilai probability success yang sama untuk tiap trialnya.
+  
+  4. random variable x merepresentasikan jumlah kemunculan success dalam suatu experiment
+  
+* 4 notasi matematika yang biasa ditemui pada binomial experiments :
+
+  * n : banyak trial pada suatu experiment
+  
+  * p : nilai probability success pada suatu trial
+  
+  * q : nilai probability failure pada suatu trial
+  
+  * x : jumlah kemunculan event success (S) pada suatu experiments.
+  
+  * contoh : suatu teknik pembibitan ikan lele memiliki tingkat keberhasilan 85%. teknis ini lalu diterapkan pada 8 kolam ikan (empang).
+  
+  * dari contoh diatas dapat diketahui bahwa :
+  
+    * probability experitment atau nilai p : 85%
+    
+    * nilai q = 1- p = 15%
+    
+    * banyak trial yang akan dilakukan  = nilai n : 8
+    
+    * nilai x (jumlah kemunculan event success) : {0,1,2,3,4,5,6,7,8}, dimana 0 = tidak ada event yang berhasil
+  
+## F.2 Binomial Probability Formula 
+
+* terdapat beberapa cara untuk menentukan outcomes (nilai x atau jumlah kemunculan event success) pada binomial experiments, antara lain : Tree Diagram, Multiplication Rule dan Binomial Probability Formula
+
+* Binomial Probability Formula :
+
+  * P(x) = $nC_x$ x $p^x$ x $q^{n-x}$ atau $\frac {n!} {(n-x)!.x!}$ x $p^x$ x $q^{n-x}$ 
+
+* contoh 1 : diketahui peluang keberhasilan suatu operasi otot tendon adalah 90%. bila dilakukan operasi terhadap 3 orang pasien ; berapa probability untuk mendapatkan keberhasilan tepat pada 2 orang pasien
+
+```{r binomial distribution, include=FALSE}
+
+# dapat diketahui bahwa p = 90% dan n = 3, serta x = 2
+
+dbinom (x=2,size = 3,prob=0.9)
+#> 0.243
+
+```
+
+* Contoh 2 : Contoh Kasus 1 : berikut adalah hasil survey yang dilakukan pada warga di suatu kecamatan terkait perangkat yang biasa digunakan untuk akses ke social media. computer : 94%, cell phone : 46%, tablet : 16%. jika dilakukan secara acak untuk 7 partisipan survey. buatlah binomial probability untuk partisipan yang melakukan akses menggunakan cell phone
+
+```{r binomial probability formula case study 1, include=FALSE}
+
+p = 0.46 #probability cell phone
+n = 7 #banyak partisipan survey
+
+# maka distribusi probability nya sebagai berikut
+# dimana  x (kejadian success)
+
+for (x in 0:7) {
+  x = x
+  prob <- round(dbinom(x=x,size = n,prob=p),digits = 4)
+  print (paste('jika x =',x,'maka probabilitinya :',prob,sep = " "))
+}
+  
+```
+
+* Contoh 3 : Contoh kasus 2 : berdasarkan hasil survey yang dilakukan pada warga di suatu kecamatan, didapati 62% partisipan berpendapat bahwa keterkaitan antara kegemaran anak-anak memaikan video game bertema kekerasan dengan kenakalan remaja. bila dilakukan acak untuk 4 orang dari partisipan survey, berapa probability untuk mendapatkan :a. tepat 2 orang sependapat, b. setidaknya 2 orang yang sependapat dan c. kurang dari 2 orang yang sependapat.
+
+```{r binomial probability formula case study 2, include=FALSE}
+
+p_2 <- 62/100
+n_2 <- 4
+
+# pertanyaan a. tepat 2 orang sependapat -> x = 2
+x_2 <- 2
+dbinom (x=x_2, size= n_2, prob = p_2)
+#> [1] 0.3330442
+
+# pertanyaan b. setidaknya 2 orang yang sependapat -> x = {2,3,4}
+dbinom (x=x_2, size = n_2, prob = p_2) + dbinom (x=x_2+1, size = n_2, prob = p_2) + dbinom (x=x_2+2, size = n_2, prob = p_2)
+#> [1] 0.8430661
+
+
+# pertanyaan c. kurang dari 2 orang yang sependapat -> x = {0,1}
+dbinom (x=0, size = n_2, prob = p_2) + dbinom (x=1, size = n_2, prob = p_2)
+#> [1] 0.1569339
+
+```
+
+* contoh 4 : contoh kasus 3 : dari hasil pendataan, diketahui 60% korban kecelakaan yang selamat mengenakan sabuk pengaman. jika dipilih 6 surveyor acak. berapa orang yang mengenakan safety belt dengan benar dan tampilkan binomial probability distribution secara visual.
+
+```{r binomial probability formula case study 3, include=FALSE }
+
+n_3 <- 0:6
+prob_3 <- round(dbinom(x = n_3, size =6, prob = 0.6),digits=4)
+prob_3
+#> [1] 0.0041 0.0369 0.1382 0.2765 0.3110 0.1866 0.0467
+
+# visualiasi 
+plot(x= n_3, y=prob_3, type = 'h', lwd = 20)
+
+# or 
+
+ggplot(data = data.frame(y=prob_3, x=n_3), mapping = aes(x=x,y=y)) + geom_bar(stat="identity") + xlab("n_survey") + ylab ("probability")
+
+```
+
+## F.3 Central Tendency of Binomial Distribution
+
+* formula :
+
+  * mean atau $\mu$ = n . p , dimana n=jumlah trial dan p=probability
+  
+  * variance atau $\sigma^2$ = n x p x q, q=probability tidak success
+  
+  * standard deviasi atau $\sigma$ = $\sqrt {\sigma^2}$
+
+* contoh kasus : dari hasil pendataan, diperoleh bahwa 56% cuaca harian di kota malang dalam satu tahun adalah berawan. carilah mean dan standard deviasi yang merepresentasikan jumlah hari di kota malang dengan cuaca harian berawan pada bulan juni 
+
+
+```{r central tendency of binomial distribution, include=FALSE}
+
+# mean
+
+mu <- 30 * 0.56 #30 = jumlah hari dibulan juni, 0.56 = probability
+mu
+#> [1] 16.8
+
+variance <- 30*0.56*(1-0.56)
+sd <- variance^0.5
+sd
+#> 2.718823
+```
+
+
 
 
 
